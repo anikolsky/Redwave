@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.omtorney.redwave.presentation.detail.EntryDetailScreen
+import com.omtorney.redwave.presentation.home.HomeScreen
 
 @Composable
 fun AppNavHost() {
@@ -17,7 +19,8 @@ fun AppNavHost() {
     ) {
         composable(route = Screen.Home.route) {
             HomeScreen(onEntryClick = { entry ->
-                navController.navigate(Screen.EntryDetail.route + "?entryTitle=${entry.title}&entryContent=${entry.content?.text}") {
+                val linkParam = entry.link?.href?.replace("/", "@")
+                navController.navigate(Screen.EntryDetail.route + "?entryLink=$linkParam") {
                     popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
@@ -25,11 +28,8 @@ fun AppNavHost() {
             })
         }
         composable(
-            route = Screen.EntryDetail.route + "?entryTitle={entryTitle}&entryContent={entryContent}",
-            arguments = listOf(
-                navArgument(name = "entryTitle") { NavType.StringType },
-                navArgument(name = "entryContent") { NavType.StringType }
-            )
+            route = Screen.EntryDetail.route + "?entryLink={entryLink}",
+            arguments = listOf(navArgument(name = "entryLink") { NavType.StringType })
         ) {
             EntryDetailScreen()
         }

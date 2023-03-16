@@ -55,7 +55,7 @@ data class Entry @JvmOverloads constructor(
     var link: EntryLink? = null,
     @field:Element(name = "updated")
     var updated: String? = null,
-    @field:Element(name = "published")
+    @field:Element(name = "published", required = false)
     var published: String? = null,
     @field:Element(name = "title")
     var title: String? = null

@@ -1,4 +1,4 @@
-package com.omtorney.redwave.domain
+package com.omtorney.redwave.domain.usecase
 
 import com.omtorney.redwave.data.model.toFeed
 import com.omtorney.redwave.domain.model.Feed
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.flow
 class GetFeed(
     private val repository: Repository
 ) {
-    operator fun invoke(subreddit: String): Flow<Resource<Feed>> = flow {
+    operator fun invoke(urlPath: String): Flow<Resource<Feed>> = flow {
         try {
             emit(Resource.Loading())
-            val feed = repository.getPosts(subreddit)
+            val feed = repository.getFeed(urlPath)
             emit(Resource.Success(data = feed.toFeed()))
         } catch (e: Exception) {
             emit(Resource.Error(message = e.localizedMessage ?: "Unexpected error"))

@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface FeedApi {
 
-    @GET("/r/{subreddit}/.rss")
+    @GET("/r/{urlPath}/.rss")
     @Headers("Content-Type: application/xml")
-    suspend fun getPosts(@Path("subreddit") subreddit: String): FeedDto
+    suspend fun getFeed(@Path("urlPath") urlPath: String): FeedDto
 }

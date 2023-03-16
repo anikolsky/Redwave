@@ -1,19 +1,67 @@
-package com.omtorney.redwave.presentation
+package com.omtorney.redwave.presentation.detail
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.omtorney.redwave.presentation.detail.EntryViewModel
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun EntryDetailScreen() {
     val viewModel = getViewModel<EntryViewModel>()
     val state = viewModel.state.value
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = state.entry?.title.toString())
-        Text(text = state.entry?.content?.text.toString())
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                Text(
+                    text = state.feed.title,
+                    style = MaterialTheme.typography.h6
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+            items(state.feed.entries) { entry ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 2.dp, vertical = 6.dp)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+                        Text(text = entry.content!!.text)
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
+        if (state.isLoading) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Loading...")
+            }
+        }
+        if (state.error.isNotEmpty()) {
+            Text(
+                text = state.error,
+                fontSize = 20.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     }
 }

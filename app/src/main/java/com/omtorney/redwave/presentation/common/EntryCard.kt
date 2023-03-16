@@ -1,4 +1,4 @@
-package com.omtorney.redwave.presentation
+package com.omtorney.redwave.presentation.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

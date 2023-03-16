@@ -1,4 +1,4 @@
-package com.omtorney.redwave.presentation
+package com.omtorney.redwave.presentation.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.omtorney.redwave.data.model.Entry
-import com.omtorney.redwave.presentation.home.HomeViewModel
+import com.omtorney.redwave.presentation.common.EntryCard
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -26,7 +26,7 @@ fun HomeScreen(
             .padding(8.dp)
     ) {
         LazyColumn(Modifier.fillMaxSize()) {
-            state.feed?.entries?.map { entry ->
+            state.feed.entries.map { entry ->
                 item {
                     EntryCard(
                         entry = entry,
@@ -39,7 +39,7 @@ fun HomeScreen(
             }
         }
         Button(
-            onClick = { viewModel.loadPosts("Kotlin") },
+            onClick = { viewModel.loadFeed("Kotlin") },
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             Text(text = "Load posts")
@@ -55,11 +55,12 @@ fun HomeScreen(
                 Text(text = "Loading...")
             }
         }
-        if (state.error.isNotEmpty())
+        if (state.error.isNotEmpty()) {
             Text(
                 text = state.error,
                 fontSize = 20.sp,
                 modifier = Modifier.align(Alignment.Center)
             )
+        }
     }
 }

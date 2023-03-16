@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.omtorney.redwave.domain.GetFeed
+import com.omtorney.redwave.domain.usecase.GetFeed
+import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.launch
 
@@ -16,7 +17,7 @@ class HomeViewModel(
     var state by mutableStateOf(FeedState())
         private set
 
-    fun loadPosts(subreddit: String) {
+    fun loadFeed(subreddit: String) {
         viewModelScope.launch {
             getFeed.invoke(subreddit).collect { result ->
                 state = when (result) {
