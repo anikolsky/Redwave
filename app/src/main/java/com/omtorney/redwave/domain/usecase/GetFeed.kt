@@ -1,5 +1,6 @@
 package com.omtorney.redwave.domain.usecase
 
+import android.util.Log
 import com.omtorney.redwave.data.model.toFeed
 import com.omtorney.redwave.domain.model.Feed
 import com.omtorney.redwave.domain.repository.Repository
@@ -16,6 +17,7 @@ class GetFeed(
             val feed = repository.getFeed(urlPath)
             emit(Resource.Success(data = feed.toFeed()))
         } catch (e: Exception) {
+            Log.d("TESTLOG", "GetFeed: error: ${e.localizedMessage}")
             emit(Resource.Error(message = e.localizedMessage ?: "Unexpected error"))
         }
     }

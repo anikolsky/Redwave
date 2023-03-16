@@ -34,7 +34,12 @@ fun EntryCard(
                 style = MaterialTheme.typography.subtitle1
             )
             Text(
-                text = entry.published.toString(),
+                text = entry.author!!.name,
+                style = MaterialTheme.typography.body2,
+                color = Color.Gray
+            )
+            Text(
+                text = entry.published,
                 style = MaterialTheme.typography.body2,
                 color = Color.Gray
             )

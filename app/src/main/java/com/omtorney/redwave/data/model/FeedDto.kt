@@ -1,6 +1,8 @@
 package com.omtorney.redwave.data.model
 
 import com.omtorney.redwave.domain.model.Feed
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.simpleframework.xml.*
 
 @Root(name = "feed", strict = false)
@@ -20,7 +22,7 @@ data class FeedDto @JvmOverloads constructor(
     @field:Element(name = "title")
     var title: String? = null,
     @field:ElementList(entry = "entry", inline = true, required = false)
-    var entries: List<Entry>? = null
+    var entries: MutableList<Entry> = mutableListOf()
 )
 
 @Root(name = "category", strict = false)
@@ -54,9 +56,9 @@ data class Entry @JvmOverloads constructor(
     @field:Element(name = "link")
     var link: EntryLink? = null,
     @field:Element(name = "updated")
-    var updated: String? = null,
+    var updated: String = "",
     @field:Element(name = "published", required = false)
-    var published: String? = null,
+    var published: String = "",
     @field:Element(name = "title")
     var title: String? = null
 )
@@ -64,9 +66,9 @@ data class Entry @JvmOverloads constructor(
 @Root(name = "author", strict = false)
 data class Author @JvmOverloads constructor(
     @field:Element(name = "name")
-    var name: String? = null,
+    var name: String = "",
     @field:Element(name = "uri")
-    var uri: String? = null
+    var uri: String = ""
 )
 
 @Root(name = "content", strict = false)
@@ -84,9 +86,16 @@ data class EntryLink @JvmOverloads constructor(
 )
 
 fun FeedDto.toFeed(): Feed {
+    val entries = this.entries.map { entry ->
+        val newContent = Content(
+            type = entry.content?.type,
+            text = Jsoup.parse(entry.content?.text ?: "empty").text()
+        )
+        entry.copy(content = newContent)
+    }
     return Feed(
-        title = title ?: "[Title]",
-        subtitle = subtitle ?: "[Subtitle]",
-        entries = entries ?: emptyList()
+        title = this.title ?: "",
+        subtitle = this.subtitle ?: "",
+        entries = entries
     )
 }
