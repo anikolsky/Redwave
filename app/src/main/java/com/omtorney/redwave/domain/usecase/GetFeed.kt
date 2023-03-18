@@ -1,8 +1,8 @@
 package com.omtorney.redwave.domain.usecase
 
 import android.util.Log
-import com.omtorney.redwave.data.model.toFeed
 import com.omtorney.redwave.domain.model.Feed
+import com.omtorney.redwave.domain.model.toFeed
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.flow.Flow

@@ -62,14 +62,10 @@ dependencies {
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
 
     // XML
     implementation 'org.simpleframework:simple-xml:2.7.1'
-
-    // Jsoup
-    implementation 'org.jsoup:jsoup:1.15.3'
 
     // DI
     implementation 'io.insert-koin:koin-androidx-compose:3.4.2'

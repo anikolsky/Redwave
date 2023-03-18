@@ -22,7 +22,7 @@ fun EntryCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 2.dp, vertical = 6.dp)
+            .padding(horizontal = 0.dp, vertical = 6.dp)
     ) {
         Column(
             modifier = Modifier

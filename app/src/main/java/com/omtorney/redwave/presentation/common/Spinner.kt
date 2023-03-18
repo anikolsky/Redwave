@@ -26,8 +26,7 @@ fun <T> Spinner(
 
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         selectedItemFactory(
-            Modifier
-                .clickable { expanded = true },
+            Modifier.clickable { expanded = true },
             selectedItem
         )
 
