@@ -18,9 +18,9 @@ fun AppNavHost() {
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen(onEntryClick = { entry ->
+            HomeScreen(onEntryClick = { entry, sortType ->
                 val linkParam = entry.link?.href?.replace("/", "@")
-                navController.navigate(Screen.EntryDetail.route + "?entryLink=$linkParam") {
+                navController.navigate(Screen.EntryDetail.route + "?entryLink=$linkParam&sortType=$sortType") {
                     popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
@@ -28,8 +28,11 @@ fun AppNavHost() {
             })
         }
         composable(
-            route = Screen.EntryDetail.route + "?entryLink={entryLink}",
-            arguments = listOf(navArgument(name = "entryLink") { NavType.StringType })
+            route = Screen.EntryDetail.route + "?entryLink={entryLink}&sortType={sortType}",
+            arguments = listOf(
+                navArgument(name = "entryLink") { NavType.StringType },
+                navArgument(name = "sortType") { NavType.StringType }
+            )
         ) {
             EntryDetailScreen()
         }

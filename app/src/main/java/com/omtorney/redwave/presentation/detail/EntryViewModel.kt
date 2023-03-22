@@ -19,16 +19,15 @@ class EntryViewModel(
     val state: State<FeedState> = _state
 
     init {
-        savedStateHandle.get<String>("entryLink")?.let { linkParam ->
-            val link = linkParam.replace("@", "/")
-            val urlPath = link.substring(link.indexOf("/r/") + 3, link.lastIndex)
-            loadDetails(urlPath)
-        }
+        val link = savedStateHandle.get<String>("entryLink")?.replace("@", "/")
+        val urlPath = link?.substring(link.indexOf("/r/") + 3, link.lastIndex)
+        val sortType = savedStateHandle.get<String>("sortType")
+        loadDetails(urlPath!!, sortType!!)
     }
 
-    private fun loadDetails(urlPath: String) {
+    private fun loadDetails(urlPath: String, sortType: String) {
         viewModelScope.launch {
-            getFeed.invoke(urlPath).collect { result ->
+            getFeed.invoke(urlPath, sortType).collect { result ->
                 _state.value = when (result) {
                     is Resource.Success -> {
                         FeedState(feed = result.data!!)

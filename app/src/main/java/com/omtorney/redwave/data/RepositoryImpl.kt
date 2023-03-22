@@ -7,5 +7,5 @@ class RepositoryImpl(
     private val feedApi: FeedApi
 ) : Repository {
 
-    override suspend fun getFeed(urlPath: String) = feedApi.getFeed(urlPath)
+    override suspend fun getFeed(urlPath: String, sortType: String) = feedApi.getFeed(urlPath, sortType)
 }

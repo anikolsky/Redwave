@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.flow
 class GetFeed(
     private val repository: Repository
 ) {
-    operator fun invoke(urlPath: String): Flow<Resource<Feed>> = flow {
+    operator fun invoke(urlPath: String, sortType: String): Flow<Resource<Feed>> = flow {
         try {
             emit(Resource.Loading())
-            val feed = repository.getFeed(urlPath)
+            val feed = repository.getFeed(urlPath, sortType)
             emit(Resource.Success(data = feed.toFeed()))
         } catch (e: Exception) {
             Log.d("TESTLOG", "GetFeed: error: ${e.localizedMessage}")

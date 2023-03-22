@@ -61,20 +61,22 @@ fun EntryDetailScreen() {
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = entry.author?.name ?: "",
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.body2,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Text(
-                            text = entry.updated,
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.body2,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = entry.author?.name ?: "",
+                                style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = entry.updated,
+                                style = MaterialTheme.typography.body2,
+                                color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                            )
+                        }
                     }
                 }
             }

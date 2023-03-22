@@ -17,9 +17,9 @@ class HomeViewModel(
     var state by mutableStateOf(FeedState())
         private set
 
-    fun loadFeed(subreddit: String) {
+    fun loadFeed(subreddit: String, sortType: String) {
         viewModelScope.launch {
-            getFeed.invoke(subreddit).collect { result ->
+            getFeed.invoke(subreddit, sortType).collect { result ->
                 state = when (result) {
                     is Resource.Success -> {
                         FeedState(feed = result.data!!)

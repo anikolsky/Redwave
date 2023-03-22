@@ -14,16 +14,18 @@ import androidx.compose.ui.unit.sp
 import com.omtorney.redwave.R
 import com.omtorney.redwave.data.model.Entry
 import com.omtorney.redwave.presentation.common.EntryCard
+import com.omtorney.redwave.presentation.common.Sort
 import com.omtorney.redwave.presentation.common.Spinner
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
-    onEntryClick: (Entry) -> Unit
+    onEntryClick: (Entry, String) -> Unit
 ) {
     val viewModel = getViewModel<HomeViewModel>()
     val state = viewModel.state
-    var selectedSubreddit by rememberSaveable { mutableStateOf("Android") }
+    var selectedSubreddit by rememberSaveable { mutableStateOf("Kotlin") }
+    var selectedSortType by rememberSaveable { mutableStateOf(Sort.NEW.type) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -31,16 +33,26 @@ fun HomeScreen(
     ) {
         LazyColumn(Modifier.fillMaxSize()) {
             item {
-                SubredditSpinner(
-                    selectedItem = selectedSubreddit,
-                    onItemSelected = { selectedSubreddit = it }
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    MySpinner(
+                        items = listOf("Android", "coding", "Kotlin"),
+                        selectedItem = selectedSubreddit,
+                        onItemSelected = { selectedSubreddit = it },
+                        modifier = Modifier.weight(3f)
+                    )
+                    MySpinner(
+                        items = listOf(Sort.HOT.type, Sort.NEW.type, Sort.TOP.type),
+                        selectedItem = selectedSortType,
+                        onItemSelected = { selectedSortType = it },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
             state.feed.entries.map { entry ->
                 item {
                     EntryCard(
                         entry = entry,
-                        onClick = { onEntryClick(it) }
+                        onClick = { onEntryClick(it, selectedSortType) }
                     )
                 }
             }
@@ -49,7 +61,7 @@ fun HomeScreen(
             }
         }
         Button(
-            onClick = { viewModel.loadFeed(selectedSubreddit) },
+            onClick = { viewModel.loadFeed(selectedSubreddit, selectedSortType) },
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             Text(text = "Load posts")
@@ -76,14 +88,15 @@ fun HomeScreen(
 }
 
 @Composable
-fun SubredditSpinner(
+fun MySpinner(
+    modifier: Modifier = Modifier,
+    items: List<String>,
     selectedItem: String,
-    onItemSelected: (String) -> Unit
+    onItemSelected: (String) -> Unit,
 ) {
-    val subredditList = listOf("Android", "coding", "Kotlin")
     Spinner(
         dropDownModifier = Modifier.wrapContentSize(),
-        items = subredditList,
+        items = items,
         selectedItem = selectedItem,
         onItemSelected = onItemSelected,
         selectedItemFactory = { modifier, item ->
@@ -110,7 +123,7 @@ fun SubredditSpinner(
                 style = MaterialTheme.typography.body1
             )
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 1.dp,
