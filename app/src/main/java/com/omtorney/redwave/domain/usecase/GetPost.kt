@@ -8,16 +8,16 @@ import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetFeed(
+class GetPost(
     private val repository: Repository
 ) {
-    operator fun invoke(subreddit: String, sortType: String): Flow<Resource<Feed>> = flow {
+    operator fun invoke(path: String): Flow<Resource<Feed>> = flow {
         try {
             emit(Resource.Loading())
-            val feed = repository.getFeed(subreddit, sortType)
-            emit(Resource.Success(data = feed.toFeed()))
+            val result = repository.getPost(path)
+            emit(Resource.Success(data = result.toFeed()))
         } catch (e: Exception) {
-            Log.d("TESTLOG", "GetFeed: error: ${e.localizedMessage}")
+            Log.d("TESTLOG", "GetPost: error: ${e.localizedMessage}")
             emit(Resource.Error(message = e.localizedMessage ?: "Unexpected error"))
         }
     }

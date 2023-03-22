@@ -6,8 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
-import com.omtorney.redwave.presentation.AppNavHost
-import com.omtorney.redwave.ui.theme.RedwaveTheme
+import com.omtorney.redwave.presentation.ui.theme.RedwaveTheme
 
 class MainActivity : ComponentActivity() {
 

@@ -40,6 +40,7 @@ fun HomeScreen(
                         onItemSelected = { selectedSubreddit = it },
                         modifier = Modifier.weight(3f)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     MySpinner(
                         items = listOf(Sort.HOT.type, Sort.NEW.type, Sort.TOP.type),
                         selectedItem = selectedSortType,

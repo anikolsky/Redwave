@@ -1,6 +1,9 @@
-package com.omtorney.redwave.ui.theme
+package com.omtorney.redwave.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
+
+val Orange = Color(0xFFFF6859)
+val PastelPeach = Color(0xFFFFE5B4)
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)

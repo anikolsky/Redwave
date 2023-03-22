@@ -1,4 +1,4 @@
-package com.omtorney.redwave.ui.theme
+package com.omtorney.redwave.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -7,8 +7,8 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
+    primary = PastelPeach,
+    primaryVariant = Orange,
     secondary = Teal200
 )
 

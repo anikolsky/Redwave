@@ -1,4 +1,4 @@
-package com.omtorney.redwave.ui.theme
+package com.omtorney.redwave.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

@@ -4,5 +4,6 @@ import com.omtorney.redwave.data.model.FeedDto
 
 interface Repository {
 
-    suspend fun getFeed(urlPath: String, sortType: String): FeedDto
+    suspend fun getFeed(subreddit: String, sortType: String): FeedDto
+    suspend fun getPost(path: String): FeedDto
 }

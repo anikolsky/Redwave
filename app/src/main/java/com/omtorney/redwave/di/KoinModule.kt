@@ -5,6 +5,7 @@ import com.omtorney.redwave.data.RepositoryImpl
 import com.omtorney.redwave.data.remote.FeedApi
 import com.omtorney.redwave.domain.usecase.GetFeed
 import com.omtorney.redwave.domain.repository.Repository
+import com.omtorney.redwave.domain.usecase.GetPost
 import com.omtorney.redwave.presentation.detail.EntryViewModel
 import com.omtorney.redwave.presentation.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,8 +17,9 @@ val appModule = module {
     single { provideRedditApi() }
     single<Repository> { RepositoryImpl(get()) } // singleOf(::RepositoryImpl) { bind<Repository>() }
     single { GetFeed(repository = get()) }
+    single { GetPost(repository = get()) }
     viewModel { HomeViewModel(getFeed = get()) } // viewModelOf(::HomeViewModel)
-    viewModel { EntryViewModel(getFeed = get(), savedStateHandle = get()) }
+    viewModel { EntryViewModel(getPost = get(), savedStateHandle = get()) }
 }
 
 fun provideRedditApi(): FeedApi {
