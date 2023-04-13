@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.getViewModel
@@ -30,7 +29,7 @@ fun EntryDetailScreen() {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Text(
-                    text = state.feed.title,
+                    text = "", // state.entries[0].title,
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -41,14 +40,14 @@ fun EntryDetailScreen() {
             item {
 //                Text(text = state.feed.entries[0].content!!.text)
             }
-            items(state.feed.entries/*.drop(1)*/) { entry ->
+            items(state.posts/*.drop(1)*/) { entry ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 2.dp, vertical = 6.dp)
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-                        val text = entry.content!!.text
+                        val text = entry.content
                         var quote = ""
                         if (text.contains("</blockquote>")) {
                             quote = text.substring(0, text.indexOf("</blockquote>"))
@@ -67,12 +66,12 @@ fun EntryDetailScreen() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = entry.author?.name ?: "",
+                                text = entry.author,
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
                             )
                             Text(
-                                text = entry.updated,
+                                text = entry.created,
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
                             )

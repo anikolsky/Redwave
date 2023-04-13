@@ -1,20 +1,26 @@
 package com.omtorney.redwave.domain.model
 
-import com.omtorney.redwave.data.model.Content
-import com.omtorney.redwave.data.model.FeedDto
+import com.omtorney.redwave.data.model.PostDto
+import java.text.SimpleDateFormat
+import java.util.*
 
-fun FeedDto.toFeed(): Feed {
-    val entries = this.entries.map { entry ->
-        val newContent = Content(
-            type = entry.content?.type,
-            text = parseText(entry.content?.text ?: "")
-        )
-        entry.copy(content = newContent)
-    }
-    return Feed(
-        title = this.title ?: "",
-        subtitle = this.subtitle ?: "",
-        entries = entries
+fun PostDto.toPost(): Post {
+    val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+    return Post(
+        id = this.id,
+        subreddit = this.subreddit,
+        title = this.title,
+        content = this.selftext,
+        upvotes = this.ups,
+        upvoteRatio = this.upvoteRatio,
+        score = this.score,
+        created = sdf.format(this.created),
+        url = this.url,
+        author = this.author,
+        comments = this.numComments,
+        isSticked = this.stickied,
+        isVideo = this.isVideo,
+        isNew = true
     )
 }
 
@@ -27,7 +33,10 @@ fun parseText(inputText: String): String {
         .replace("</p>", "")
         .replace("</div>", "")
 
-        .replace(Regex("<li>|</li>|<ul>|</ul>|<strong>|</strong>|<table>|</table>|<tr>|</tr>|<td>|</td>|<span>|</span>|<em>|</em>"), "")
+        .replace(
+            Regex("<li>|</li>|<ul>|</ul>|<strong>|</strong>|<table>|</table>|<tr>|</tr>|<td>|</td>|<span>|</span>|<em>|</em>"),
+            ""
+        )
 //        .replace(Regex("<li>|</li>"), "")
 //        .replace(Regex("<ul>|</ul>"), "")
 //        .replace(Regex("<strong>|</strong>"), "")

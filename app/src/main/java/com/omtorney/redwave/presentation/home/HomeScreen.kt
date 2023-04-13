@@ -1,5 +1,6 @@
 package com.omtorney.redwave.presentation.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,79 +13,114 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.omtorney.redwave.R
-import com.omtorney.redwave.data.model.Entry
+import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.presentation.common.EntryCard
-import com.omtorney.redwave.presentation.common.Sort
 import com.omtorney.redwave.presentation.common.Spinner
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
-    onEntryClick: (Entry, String) -> Unit
+    onEntryClick: (Post, String) -> Unit
 ) {
-    val viewModel = getViewModel<HomeViewModel>()
+    val viewModel = getViewModel<HomeViewModel>() // TODO move to NavHost
     val state = viewModel.state
-    var selectedSubreddit by rememberSaveable { mutableStateOf("Kotlin") }
-    var selectedSortType by rememberSaveable { mutableStateOf(Sort.NEW.type) }
-    Box(
+    val selectedSubreddit = viewModel.selectedSubreddit
+    var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
-        LazyColumn(Modifier.fillMaxSize()) {
-            item {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    MySpinner(
-                        items = listOf("Android", "coding", "Kotlin"),
-                        selectedItem = selectedSubreddit,
-                        onItemSelected = { selectedSubreddit = it },
-                        modifier = Modifier.weight(3f)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    MySpinner(
-                        items = listOf(Sort.HOT.type, Sort.NEW.type, Sort.TOP.type),
-                        selectedItem = selectedSortType,
-                        onItemSelected = { selectedSortType = it },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
-            state.feed.entries.map { entry ->
-                item {
-                    EntryCard(
-                        entry = entry,
-                        onClick = { onEntryClick(it, selectedSortType) }
-                    )
-                }
-            }
-            item {
-                Spacer(modifier = Modifier.height(50.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            MySpinner(
+                items = listOf(
+                    Subreddit.AndroidDev.title,
+                    Subreddit.Coding.title,
+                    Subreddit.Kotlin.title
+                ),
+                selectedItem = selectedSubreddit,
+                onItemSelected = { viewModel.selectSubreddit(it) },
+                modifier = Modifier.weight(2.5f)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            MySpinner(
+                items = listOf(
+                    Sort.Hot.type,
+                    Sort.New.type,
+                    Sort.Top.type
+                ),
+                selectedItem = selectedSortType,
+                onItemSelected = { selectedSortType = it },
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            OutlinedButton(
+                onClick = { viewModel.getEntries(selectedSubreddit, selectedSortType) },
+                border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primary),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(45.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.round_sync),
+                    contentDescription = "Load",
+                )
             }
         }
-        Button(
-            onClick = { viewModel.loadFeed(selectedSubreddit, selectedSortType) },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            Text(text = "Load posts")
+        if (state.posts.isNotEmpty()) {
+            LazyColumn(Modifier.fillMaxSize()) {
+                state.posts.map { post ->
+                    item {
+                        EntryCard(
+                            entry = post,
+                            onClick = {
+                                onEntryClick(it, selectedSortType)
+                                if (post.isNew) {
+                                    viewModel.markEntryAsRead(it)
+                                }
+                            }
+                        )
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(50.dp))
+                }
+            }
         }
         if (state.isLoading) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Loading...")
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Loading...")
+                }
             }
         }
         if (state.error.isNotEmpty()) {
-            Text(
-                text = state.error,
-                fontSize = 20.sp,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = state.error,
+                    fontSize = 20.sp,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
+//        if (state.entries.isEmpty()) {
+//            Box(modifier = Modifier.fillMaxSize()) {
+//                Text(
+//                    text = "Refresh feed",
+//                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f),
+//                    modifier = Modifier.align(Alignment.Center)
+//                )
+//            }
+//        }
     }
 }
 
@@ -96,15 +132,15 @@ fun MySpinner(
     onItemSelected: (String) -> Unit,
 ) {
     Spinner(
-        dropDownModifier = Modifier.wrapContentSize(),
+        dropDownModifier = modifier.wrapContentSize(),
         items = items,
         selectedItem = selectedItem,
         onItemSelected = onItemSelected,
-        selectedItemFactory = { modifier, item ->
+        selectedItemFactory = { modif, item ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
+                modifier = modif
                     .padding(12.dp)
                     .fillMaxWidth()
             ) {
@@ -126,10 +162,23 @@ fun MySpinner(
         },
         modifier = modifier
             .fillMaxWidth()
+            .height(45.dp)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.primary,
                 shape = MaterialTheme.shapes.small
             )
     )
+}
+
+enum class Subreddit(val title: String) {
+    AndroidDev("androiddev"),
+    Coding("coding"),
+    Kotlin("Kotlin")
+}
+
+enum class Sort(val type: String) {
+    Hot("hot"),
+    New("new"),
+    Top("top")
 }

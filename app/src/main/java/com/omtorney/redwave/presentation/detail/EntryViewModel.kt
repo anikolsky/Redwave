@@ -1,19 +1,22 @@
 package com.omtorney.redwave.presentation.detail
 
+import android.app.Application
+import android.content.Intent
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.omtorney.redwave.domain.usecase.GetPost
+import com.omtorney.redwave.domain.usecase.GetComments
 import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.launch
 
 class EntryViewModel(
-    private val getPost: GetPost,
+    private val getComments: GetComments,
+    private val application: Application,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _state = mutableStateOf(FeedState())
     val state: State<FeedState> = _state
@@ -28,10 +31,10 @@ class EntryViewModel(
 
     private fun loadDetails(path: String) {
         viewModelScope.launch {
-            getPost.invoke(path).collect { result ->
+            getComments.invoke(path).collect { result ->
                 _state.value = when (result) {
                     is Resource.Success -> {
-                        FeedState(feed = result.data!!)
+                        FeedState(posts = result.data!!)
                     }
                     is Resource.Loading -> {
                         FeedState(isLoading = true)
@@ -42,5 +45,19 @@ class EntryViewModel(
                 }
             }
         }
+    }
+
+    fun shareSelectedText(text: String, selectionStart: Int, selectionEnd: Int) {
+        val context = application.applicationContext
+        val selectedTextString = text.substring(selectionStart, selectionEnd)
+
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, selectedTextString)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
     }
 }

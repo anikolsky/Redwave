@@ -1,31 +1,62 @@
 package com.omtorney.redwave.di
 
+import androidx.room.Room
 import com.omtorney.redwave.BuildConfig
 import com.omtorney.redwave.data.RepositoryImpl
+import com.omtorney.redwave.data.local.AppDatabase
+import com.omtorney.redwave.data.local.PostDao
 import com.omtorney.redwave.data.remote.FeedApi
-import com.omtorney.redwave.domain.usecase.GetFeed
 import com.omtorney.redwave.domain.repository.Repository
-import com.omtorney.redwave.domain.usecase.GetPost
+import com.omtorney.redwave.domain.usecase.*
 import com.omtorney.redwave.presentation.detail.EntryViewModel
 import com.omtorney.redwave.presentation.home.HomeViewModel
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 val appModule = module {
+
+    /** Retrofit */
     single { provideRedditApi() }
-    single<Repository> { RepositoryImpl(get()) } // singleOf(::RepositoryImpl) { bind<Repository>() }
-    single { GetFeed(repository = get()) }
-    single { GetPost(repository = get()) }
-    viewModel { HomeViewModel(getFeed = get()) } // viewModelOf(::HomeViewModel)
-    viewModel { EntryViewModel(getPost = get(), savedStateHandle = get()) }
+
+    /** Room */
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "Redwave_Database"
+        ).build()
+    }
+    single<PostDao> {
+        get<AppDatabase>().postDao()
+    }
+
+    /** Repository */
+    single<Repository> { RepositoryImpl(get(), get()) } // singleOf(::RepositoryImpl) { bind<Repository>() }
+
+    /** UseCases */
+    single { GetPosts(repository = get()) }
+    single { GetComments(repository = get()) }
+    single { CachePosts(repository = get()) }
+    single { LoadCachedPosts(repository = get()) }
+    single { UpdatePost(repository = get()) }
+
+    /** ViewModels */
+    viewModel { HomeViewModel(getPosts = get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
+    viewModel { EntryViewModel(getComments = get(), application = get(), savedStateHandle = get()) }
 }
 
 fun provideRedditApi(): FeedApi {
+    val moshi = Moshi.Builder()
+        .addLast(KotlinJsonAdapterFactory())
+        .build()
     return Retrofit.Builder()
         .baseUrl(BuildConfig.API_URL)
-        .addConverterFactory(SimpleXmlConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
         .create(FeedApi::class.java)
 }

@@ -1,23 +1,24 @@
 package com.omtorney.redwave.domain.usecase
 
 import android.util.Log
-import com.omtorney.redwave.domain.model.Feed
-import com.omtorney.redwave.domain.model.toFeed
+import com.omtorney.redwave.domain.model.Post
+import com.omtorney.redwave.domain.model.toPost
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetFeed(
+class GetPosts(
     private val repository: Repository
 ) {
-    operator fun invoke(subreddit: String, sortType: String): Flow<Resource<Feed>> = flow {
+    operator fun invoke(subreddit: String): Flow<Resource<List<Post>>> = flow {
         try {
             emit(Resource.Loading())
-            val feed = repository.getFeed(subreddit, sortType)
-            emit(Resource.Success(data = feed.toFeed()))
+            val feed = repository.getFeed(subreddit).data.children
+            val posts = feed.map { it.data.toPost() }
+            emit(Resource.Success(data = posts))
         } catch (e: Exception) {
-            Log.d("TESTLOG", "GetFeed: error: ${e.localizedMessage}")
+            Log.d("TESTLOG", "GetPosts: error: ${e.localizedMessage}")
             emit(Resource.Error(message = e.localizedMessage ?: "Unexpected error"))
         }
     }
