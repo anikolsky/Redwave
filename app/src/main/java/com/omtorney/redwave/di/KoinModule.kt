@@ -39,15 +39,16 @@ val appModule = module {
     single<Repository> { RepositoryImpl(get(), get()) } // singleOf(::RepositoryImpl) { bind<Repository>() }
 
     /** UseCases */
-    single { GetPosts(repository = get()) }
-    single { GetComments(repository = get()) }
     single { CachePosts(repository = get()) }
+    single { GetComments(repository = get()) }
+    single { GetPostDetails(repository = get()) }
+    single { GetPosts(repository = get()) }
     single { LoadCachedPosts(repository = get()) }
     single { UpdatePost(repository = get()) }
 
     /** ViewModels */
-    viewModel { HomeViewModel(getPosts = get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
-    viewModel { EntryViewModel(getComments = get(), application = get(), savedStateHandle = get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
+    viewModel { EntryViewModel(get(), get(), get()) }
 }
 
 fun provideRedditApi(): FeedApi {

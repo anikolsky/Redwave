@@ -29,7 +29,7 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
+            .padding(0.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -75,7 +75,7 @@ fun HomeScreen(
                 state.posts.map { post ->
                     item {
                         EntryCard(
-                            entry = post,
+                            post = post,
                             onClick = {
                                 onEntryClick(it, selectedSortType)
                                 if (post.isNew) {

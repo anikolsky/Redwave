@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface Repository {
 
     suspend fun getFeed(subreddit: String): FeedDto
-    suspend fun getPost(path: String): FeedDto
+    suspend fun getPost(path: String): List<FeedDto>
 
     fun loadCachedPosts(subreddit: String): Flow<List<Post>>
     suspend fun cachePosts(posts: List<Post>)

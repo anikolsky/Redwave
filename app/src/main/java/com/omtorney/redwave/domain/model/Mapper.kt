@@ -6,21 +6,43 @@ import java.util.*
 
 fun PostDto.toPost(): Post {
     val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+    val dateTimeCreated = sdf.format(this.created * 1000)
     return Post(
         id = this.id,
         subreddit = this.subreddit,
-        title = this.title,
-        content = this.selftext,
-        upvotes = this.ups,
-        upvoteRatio = this.upvoteRatio,
+        title = this.title ?: "no title",
+        content = this.selftext ?: "no title",
+        upVotes = this.ups,
+        downVotes = this.downs,
+        upvoteRatio = this.upvoteRatio ?: 0f,
         score = this.score,
-        created = sdf.format(this.created),
-        url = this.url,
+        created = dateTimeCreated,
+        permalink = this.permalink,
+        url = this.url ?: "no title",
         author = this.author,
-        comments = this.numComments,
-        isSticked = this.stickied,
-        isVideo = this.isVideo,
+        comments = this.numComments ?: 0,
+        isStickied = this.stickied,
+        isVideo = this.isVideo ?: false,
         isNew = true
+    )
+}
+
+fun PostDto.toComment(): Comment {
+    val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+    val dateTimeCreated = sdf.format(this.created * 1000)
+    return Comment(
+        id = this.id,
+        body = this.body ?: "no title",
+        upVotes = this.ups,
+        downVotes = this.downs,
+        upvoteRatio = this.upvoteRatio ?: 0f,
+        score = this.score,
+        created = dateTimeCreated,
+        author = this.author,
+        replies = when (this.replies) {
+            is List<*> -> { toComment() }
+            else -> { "" }
+        }
     )
 }
 

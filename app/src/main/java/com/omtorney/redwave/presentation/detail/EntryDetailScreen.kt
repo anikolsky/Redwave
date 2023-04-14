@@ -29,7 +29,7 @@ fun EntryDetailScreen() {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Text(
-                    text = "", // state.entries[0].title,
+                    text = "title",
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -38,16 +38,17 @@ fun EntryDetailScreen() {
                 Spacer(modifier = Modifier.height(10.dp))
             }
             item {
-//                Text(text = state.feed.entries[0].content!!.text)
+//                Text(text = state.posts[0].content)
+                Text(text = "content")
             }
-            items(state.posts/*.drop(1)*/) { entry ->
+            items(state.comments) { comment ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 2.dp, vertical = 6.dp)
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-                        val text = entry.content
+                        val text = comment.body
                         var quote = ""
                         if (text.contains("</blockquote>")) {
                             quote = text.substring(0, text.indexOf("</blockquote>"))
@@ -66,12 +67,12 @@ fun EntryDetailScreen() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = entry.author,
+                                text = comment.author,
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
                             )
                             Text(
-                                text = entry.created,
+                                text = comment.created,
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
                             )

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PostDao {
 
-    @Query("SELECT * FROM posts WHERE subreddit = :subreddit") // and sort by date
+    @Query("SELECT * FROM posts WHERE subreddit = :subreddit ORDER BY created DESC")
     fun getPosts(subreddit: String): Flow<List<Post>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

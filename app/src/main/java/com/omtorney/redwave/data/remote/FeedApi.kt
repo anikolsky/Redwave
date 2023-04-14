@@ -11,7 +11,7 @@ interface FeedApi {
     @Headers("Content-Type: application/json")
     suspend fun getFeed(@Path("subreddit") subreddit: String): FeedDto
 
-    @GET("/r/{path}/.json")
+    @GET("{path}.json")
     @Headers("Content-Type: application/json")
-    suspend fun getPost(@Path("path") path: String): FeedDto
+    suspend fun getPost(@Path("path") path: String): List<FeedDto>
 }
