@@ -14,32 +14,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.omtorney.redwave.domain.model.Comment
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun EntryDetailScreen() {
     val viewModel = getViewModel<EntryViewModel>()
     val state = viewModel.state.value
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Text(
-                    text = "title",
+                    text = state.postTitle,
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp, vertical = 4.dp)
+                        .padding(4.dp)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
             }
             item {
-//                Text(text = state.posts[0].content)
-                Text(text = "content")
+                Text(
+                    text = state.postContent,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(4.dp)
+                )
             }
             items(state.comments) { comment ->
                 Card(
@@ -55,9 +59,25 @@ fun EntryDetailScreen() {
                             Text(text = quote, color = Color.Gray)
                         }
                         SelectionContainer {
-                            Text(text = text
-                                .replace(quote, "")
-                                .replace("</blockquote>", "")
+                            Text(
+                                text = text
+                                    .replace(quote, "")
+                                    .replace("</blockquote>", ""),
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = comment.upVotes.toString(),
+                                style = MaterialTheme.typography.body2,
+                                color = Color.Green.copy(alpha = 0.3f)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = comment.downVotes.toString(),
+                                style = MaterialTheme.typography.body2,
+                                color = Color.Red.copy(alpha = 0.3f)
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
@@ -79,6 +99,18 @@ fun EntryDetailScreen() {
                         }
                     }
                 }
+//                if (comment.replies is List<*>) {
+//                    val replies = comment.replies as List<Comment>
+//                    replies.map {
+//                        Text(text = it.body)
+//                    }
+//                    Row {
+//                        Spacer(modifier = Modifier.width(8.dp))
+//                        LazyColumn {
+//                            item { comment.replies.first().toString() }
+//                        }
+//                    }
+//                }
             }
         }
         if (state.isLoading) {

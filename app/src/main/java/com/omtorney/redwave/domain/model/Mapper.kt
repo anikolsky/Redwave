@@ -1,5 +1,6 @@
 package com.omtorney.redwave.domain.model
 
+import android.util.Log
 import com.omtorney.redwave.data.model.PostDto
 import java.text.SimpleDateFormat
 import java.util.*
@@ -59,14 +60,6 @@ fun parseText(inputText: String): String {
             Regex("<li>|</li>|<ul>|</ul>|<strong>|</strong>|<table>|</table>|<tr>|</tr>|<td>|</td>|<span>|</span>|<em>|</em>"),
             ""
         )
-//        .replace(Regex("<li>|</li>"), "")
-//        .replace(Regex("<ul>|</ul>"), "")
-//        .replace(Regex("<strong>|</strong>"), "")
-//        .replace(Regex("<table>|</table>"), "")
-//        .replace(Regex("<tr>|</tr>"), "")
-//        .replace(Regex("<td>|</td>"), "")
-//        .replace(Regex("<span>|</span>"), "")
-//        .replace(Regex("<em>|</em>"), "")
 
         .replaceFirst(Regex("<p>"), "")
         .replace("&lt;", "<")

@@ -12,5 +12,5 @@ interface Repository {
     fun loadCachedPosts(subreddit: String): Flow<List<Post>>
     suspend fun cachePosts(posts: List<Post>)
     suspend fun updatePost(post: Post)
-    suspend fun emptyCache(posts: List<Post>)
+    suspend fun clearCache()
 }

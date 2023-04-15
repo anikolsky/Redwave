@@ -26,92 +26,111 @@ fun HomeScreen(
     val state = viewModel.state
     val selectedSubreddit = viewModel.selectedSubreddit
     var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            MySpinner(
-                items = listOf(
-                    Subreddit.AndroidDev.title,
-                    Subreddit.Coding.title,
-                    Subreddit.Kotlin.title
-                ),
-                selectedItem = selectedSubreddit,
-                onItemSelected = { viewModel.selectSubreddit(it) },
-                modifier = Modifier.weight(2.5f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            MySpinner(
-                items = listOf(
-                    Sort.Hot.type,
-                    Sort.New.type,
-                    Sort.Top.type
-                ),
-                selectedItem = selectedSortType,
-                onItemSelected = { selectedSortType = it },
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            OutlinedButton(
-                onClick = { viewModel.getEntries(selectedSubreddit, selectedSortType) },
-                border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primary),
-                modifier = Modifier
-                    .weight(1f)
-                    .height(45.dp)
+    val scaffoldState = rememberScaffoldState()
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.clearCache()
+                },
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.round_sync),
-                    contentDescription = "Load",
+                    painter = painterResource(id = R.drawable.round_delete),
+                    contentDescription = "Clear cache"
                 )
             }
-        }
-        if (state.posts.isNotEmpty()) {
-            LazyColumn(Modifier.fillMaxSize()) {
-                state.posts.map { post ->
-                    item {
-                        EntryCard(
-                            post = post,
-                            onClick = {
-                                onEntryClick(it, selectedSortType)
-                                if (post.isNew) {
-                                    viewModel.markEntryAsRead(it)
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        scaffoldState = scaffoldState
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                MySpinner(
+                    items = listOf(
+                        Subreddit.AndroidDev.title,
+                        Subreddit.Coding.title,
+                        Subreddit.Kotlin.title
+                    ),
+                    selectedItem = selectedSubreddit,
+                    onItemSelected = { viewModel.selectSubreddit(it) },
+                    modifier = Modifier.weight(2.5f)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                MySpinner(
+                    items = listOf(
+                        Sort.Hot.type,
+                        Sort.New.type,
+                        Sort.Top.type
+                    ),
+                    selectedItem = selectedSortType,
+                    onItemSelected = { selectedSortType = it },
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                OutlinedButton(
+                    onClick = { viewModel.getEntries(selectedSubreddit, selectedSortType) },
+                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primary),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(45.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.round_sync),
+                        contentDescription = "Load",
+                    )
+                }
+            }
+            if (state.posts.isNotEmpty()) {
+                LazyColumn(Modifier.fillMaxSize()) {
+                    state.posts.map { post ->
+                        item {
+                            EntryCard(
+                                post = post,
+                                onClick = {
+                                    onEntryClick(it, selectedSortType)
+                                    if (post.isNew) {
+                                        viewModel.markEntryAsRead(it)
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(50.dp))
                     }
                 }
-                item {
-                    Spacer(modifier = Modifier.height(50.dp))
+            }
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Loading...")
+                    }
                 }
             }
-        }
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    CircularProgressIndicator()
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Loading...")
+            if (state.error.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = state.error,
+                        fontSize = 20.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
-        }
-        if (state.error.isNotEmpty()) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(
-                    text = state.error,
-                    fontSize = 20.sp,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
 //        if (state.entries.isEmpty()) {
 //            Box(modifier = Modifier.fillMaxSize()) {
 //                Text(
@@ -121,6 +140,7 @@ fun HomeScreen(
 //                )
 //            }
 //        }
+        }
     }
 }
 

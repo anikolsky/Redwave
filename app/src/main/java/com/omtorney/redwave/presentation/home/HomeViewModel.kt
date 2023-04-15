@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.usecase.CachePosts
+import com.omtorney.redwave.domain.usecase.ClearCache
 import com.omtorney.redwave.domain.usecase.GetPosts
 import com.omtorney.redwave.domain.usecase.LoadCachedPosts
 import com.omtorney.redwave.domain.usecase.UpdatePost
@@ -18,8 +19,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getPosts: GetPosts,
     private val cachePosts: CachePosts,
+    private val clearCache: ClearCache,
+    private val getPosts: GetPosts,
     private val loadCachedPosts: LoadCachedPosts,
     private val updatePost: UpdatePost
 ) : ViewModel() {
@@ -72,6 +74,12 @@ class HomeViewModel(
         viewModelScope.launch {
             val updatedEntry = post.copy(isNew = false)
             updatePost.invoke(updatedEntry)
+        }
+    }
+
+    fun clearCache() {
+        viewModelScope.launch {
+            clearCache.invoke()
         }
     }
 }

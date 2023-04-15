@@ -6,6 +6,7 @@ import com.omtorney.redwave.data.RepositoryImpl
 import com.omtorney.redwave.data.local.AppDatabase
 import com.omtorney.redwave.data.local.PostDao
 import com.omtorney.redwave.data.remote.FeedApi
+import com.omtorney.redwave.data.remote.MyCustomAdapter
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.domain.usecase.*
 import com.omtorney.redwave.presentation.detail.EntryViewModel
@@ -40,6 +41,7 @@ val appModule = module {
 
     /** UseCases */
     single { CachePosts(repository = get()) }
+    single { ClearCache(repository = get()) }
     single { GetComments(repository = get()) }
     single { GetPostDetails(repository = get()) }
     single { GetPosts(repository = get()) }
@@ -47,12 +49,13 @@ val appModule = module {
     single { UpdatePost(repository = get()) }
 
     /** ViewModels */
-    viewModel { HomeViewModel(get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
+    viewModel { HomeViewModel(get(), get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
     viewModel { EntryViewModel(get(), get(), get()) }
 }
 
 fun provideRedditApi(): FeedApi {
     val moshi = Moshi.Builder()
+        .add(object  : Any() {}.javaClass, MyCustomAdapter())
         .addLast(KotlinJsonAdapterFactory())
         .build()
     return Retrofit.Builder()

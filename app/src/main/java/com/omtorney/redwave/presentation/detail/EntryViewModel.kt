@@ -11,7 +11,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.model.toComment
-import com.omtorney.redwave.domain.usecase.GetComments
 import com.omtorney.redwave.domain.usecase.GetPostDetails
 import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.util.Resource
@@ -36,17 +35,21 @@ class EntryViewModel(
                 .build()
             val jsonAdapter = moshi.adapter(Post::class.java).lenient()
             val postObject = jsonAdapter.fromJson(Uri.decode(postJson))
-            loadDetails(post = postObject!!, path = postObject.permalink)
+            loadDetails(path = postObject!!.permalink)
         }
     }
 
-    private fun loadDetails(post: Post, path: String) {
+    private fun loadDetails(path: String) {
         viewModelScope.launch {
             getPostDetails.invoke(path).collect { result ->
                 _state.value = when (result) {
                     is Resource.Success -> {
-                        Log.d("TESTLOG", "EntryViewModel: result.data: ${result.data}")
-                        FeedState(posts = listOf(post), comments = result.data!![1].data.children.map { it.data.toComment() })
+                        Log.d("TESTLOG", "EntryViewModel: comments: ${result.data!![1].data.children}")
+                        FeedState(
+                            postTitle = result.data!![0].data.children[0].data.title!!,
+                            postContent = result.data!![0].data.children[0].data.selftext!!,
+                            comments = result.data!![1].data.children.map { it.data.toComment() }
+                        )
                     }
                     is Resource.Loading -> {
                         FeedState(isLoading = true)

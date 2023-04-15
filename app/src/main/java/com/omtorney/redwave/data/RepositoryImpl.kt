@@ -16,5 +16,5 @@ class RepositoryImpl(
     override fun loadCachedPosts(subreddit: String) = postDao.getPosts(subreddit)
     override suspend fun cachePosts(posts: List<Post>) = postDao.insertAll(posts)
     override suspend fun updatePost(post: Post) = postDao.updatePost(post)
-    override suspend fun emptyCache(posts: List<Post>) = postDao.deleteAll(posts)
+    override suspend fun clearCache() = postDao.deleteAll()
 }

@@ -17,5 +17,8 @@ interface PostDao {
     suspend fun updatePost(post: Post)
 
     @Delete
-    suspend fun deleteAll(posts: List<Post>)
+    suspend fun delete(post: Post)
+
+    @Query("DELETE FROM posts")
+    suspend fun deleteAll()
 }
