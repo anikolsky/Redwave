@@ -46,9 +46,9 @@ class EntryDetailViewModel @Inject constructor(
                     is Resource.Success -> {
                         logd("EntryDetailViewModel: comments: ${result.data!![1].data.children}")
                         FeedState(
-                            postTitle = result.data!![0].data.children[0].data.title!!,
-                            postContent = result.data!![0].data.children[0].data.selftext!!,
-                            comments = result.data!![1].data.children.map { it.data.toComment() }
+                            postTitle = result.data[0].data.children[0].data.title!!,
+                            postContent = result.data[0].data.children[0].data.selftext!!,
+                            comments = result.data[1].data.children.map { it.data.toComment() }
                         )
                     }
                     is Resource.Loading -> {

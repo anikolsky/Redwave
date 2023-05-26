@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,15 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.omtorney.redwave.presentation.common.FeedState
 
 @Composable
-fun EntryDetailScreen() {
-    val viewModel = hiltViewModel<EntryDetailViewModel>()
-    val state = viewModel.state.value
-
+fun EntryDetailScreen(
+    state: FeedState
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,12 +47,14 @@ fun EntryDetailScreen() {
             }
             items(state.comments) { comment ->
                 Card(
+                    shape = MaterialTheme.shapes.medium,
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp, vertical = 6.dp)
+                        .padding(horizontal = 0.dp, vertical = 4.dp)
                 ) {
-                    Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-                        val text = comment.body
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        val text = comment.content
                         var quote = ""
                         if (text.contains("</blockquote>")) {
                             quote = text.substring(0, text.indexOf("</blockquote>"))
@@ -65,33 +68,22 @@ fun EntryDetailScreen() {
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = comment.upVotes.toString(),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.Green.copy(alpha = 0.3f)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = comment.downVotes.toString(),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.Red.copy(alpha = 0.3f)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = comment.author,
+                                text = "${comment.upVotes} rating",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                             )
+                            Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = comment.created,
+                                text = "${comment.created}  •  ${comment.author}",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                             )

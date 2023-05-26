@@ -2,6 +2,8 @@ package com.omtorney.redwave.presentation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,7 +12,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.presentation.detail.EntryDetailScreen
+import com.omtorney.redwave.presentation.detail.EntryDetailViewModel
 import com.omtorney.redwave.presentation.home.HomeScreen
+import com.omtorney.redwave.presentation.home.HomeViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
@@ -22,7 +26,12 @@ fun AppNavHost() {
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen(onEntryClick = { post, sortType ->
+            val viewModel = hiltViewModel<HomeViewModel>()
+            val state = viewModel.state
+            HomeScreen(
+                state = state,
+                onEvent = viewModel::onEvent,
+                onEntryClick = { post, sortType ->
                 val moshi = Moshi.Builder()
                     .addLast(KotlinJsonAdapterFactory())
                     .build()
@@ -42,7 +51,9 @@ fun AppNavHost() {
                 navArgument(name = "sortType") { NavType.StringType }
             )
         ) {
-            EntryDetailScreen()
+            val viewModel = hiltViewModel<EntryDetailViewModel>()
+            val state by viewModel.state
+            EntryDetailScreen(state = state)
         }
     }
 }

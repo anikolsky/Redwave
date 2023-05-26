@@ -1,6 +1,5 @@
 package com.omtorney.redwave.presentation.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,15 +13,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,34 +36,79 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.omtorney.redwave.R
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.presentation.common.EntryCard
+import com.omtorney.redwave.presentation.common.FeedEvent
+import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.presentation.common.Spinner
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    state: FeedState,
+    onEvent: (FeedEvent) -> Unit,
     onEntryClick: (Post, String) -> Unit
 ) {
-    val viewModel = hiltViewModel<HomeViewModel>() // TODO move to NavHost
-    val state = viewModel.state
-    val selectedSubreddit = viewModel.selectedSubreddit
+    var selectedSubreddit by rememberSaveable { mutableStateOf(state.selectedSubreddit) }
     var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }
 
     Scaffold(
-        topBar = {},
+        topBar = {
+            TopAppBar(
+                title = {},
+                actions = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                    ) {
+                        MySpinner(
+                            items = listOf(
+                                Subreddit.AndroidDev.title,
+                                Subreddit.Coding.title,
+                                Subreddit.Kotlin.title
+                            ),
+                            selectedItem = selectedSubreddit,
+                            onItemSelected = { item ->
+                                selectedSubreddit = item
+                                onEvent(FeedEvent.SelectSubreddit(selectedSubreddit))
+                            },
+                            modifier = Modifier.weight(2.5f)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        MySpinner(
+                            items = listOf(
+                                Sort.Hot.type,
+                                Sort.New.type,
+                                Sort.Top.type
+                            ),
+                            selectedItem = selectedSortType,
+                            onItemSelected = { selectedSortType = it },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                })
+        },
         bottomBar = {
             BottomAppBar(
-                actions = {},
+                actions = {
+                    IconButton(onClick = { onEvent(FeedEvent.ClearCache) }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Clear cache"
+                        )
+                    }
+                },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = viewModel::clearCache,
+                        onClick = { onEvent(FeedEvent.GetEntries(selectedSubreddit)) },
                         elevation = FloatingActionButtonDefaults.elevation(0.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.round_delete),
-                            contentDescription = "Clear cache"
+                            painter = painterResource(id = R.drawable.round_sync),
+                            contentDescription = "Load"
                         )
                     }
                 }
@@ -72,45 +120,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                MySpinner(
-                    items = listOf(
-                        Subreddit.AndroidDev.title,
-                        Subreddit.Coding.title,
-                        Subreddit.Kotlin.title
-                    ),
-                    selectedItem = selectedSubreddit,
-                    onItemSelected = { viewModel.selectSubreddit(it) },
-                    modifier = Modifier.weight(2.5f)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                MySpinner(
-                    items = listOf(
-                        Sort.Hot.type,
-                        Sort.New.type,
-                        Sort.Top.type
-                    ),
-                    selectedItem = selectedSortType,
-                    onItemSelected = { selectedSortType = it },
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                OutlinedButton(
-                    onClick = { viewModel.getEntries(selectedSubreddit) },
-                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(45.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.round_sync),
-                        contentDescription = "Load",
-                    )
-                }
-            }
+
             if (state.posts.isNotEmpty()) {
                 LazyColumn(Modifier.fillMaxSize()) {
                     state.posts.map { post ->
@@ -120,7 +130,7 @@ fun HomeScreen(
                                 onClick = {
                                     onEntryClick(it, selectedSortType)
                                     if (post.isNew) {
-                                        viewModel.markEntryAsRead(it)
+                                        onEvent(FeedEvent.MarkEntryAsRead(it))
                                     }
                                 }
                             )

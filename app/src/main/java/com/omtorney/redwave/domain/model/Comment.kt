@@ -2,7 +2,7 @@ package com.omtorney.redwave.domain.model
 
 data class Comment(
     val id: String,
-    val body: String,
+    val content: String,
     val upVotes: Int,
     val downVotes: Int,
     val upvoteRatio: Float,
