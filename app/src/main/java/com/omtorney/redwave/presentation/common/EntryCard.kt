@@ -3,10 +3,12 @@ package com.omtorney.redwave.presentation.common
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,11 +24,13 @@ fun EntryCard(
 ) {
     Card(
         shape = RoundedCornerShape(0.dp),
-        backgroundColor = if (post.isNew) {
-            MaterialTheme.colors.primary.copy(alpha = 0.1f)
-        } else {
-            MaterialTheme.colors.background
-        },
+        colors = CardDefaults.cardColors(
+            if (post.isNew) {
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+            } else {
+                MaterialTheme.colorScheme.background
+            }
+        ),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 0.dp, vertical = 0.dp)
@@ -35,7 +39,7 @@ fun EntryCard(
         Column(modifier = Modifier.padding(8.dp)) {
             Text(
                 text = post.title,
-                style = MaterialTheme.typography.subtitle1
+                style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
             Row(
@@ -43,20 +47,20 @@ fun EntryCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Comments: ${post.comments}",
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.6f)
+                    text = "${post.comments} comments",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
                 Row {
                     Text(
                         text = post.upVotes.toString(),
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.bodySmall,
                         color = Color.Green.copy(alpha = 0.3f)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = post.downVotes.toString(),
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.bodySmall,
                         color = Color.Red.copy(alpha = 0.3f)
                     )
                 }
@@ -69,16 +73,16 @@ fun EntryCard(
             ) {
                 Text(
                     text = post.author,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                 )
                 Text(
                     text = post.created,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                 )
             }
         }
     }
-    Divider()
+    Divider(color = DividerDefaults.color.copy(alpha = 0.5f))
 }

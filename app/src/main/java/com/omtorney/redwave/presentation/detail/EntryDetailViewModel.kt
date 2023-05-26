@@ -3,7 +3,6 @@ package com.omtorney.redwave.presentation.detail
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -13,12 +12,13 @@ import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.model.toComment
 import com.omtorney.redwave.domain.usecase.GetPostDetails
 import com.omtorney.redwave.presentation.common.FeedState
+import com.omtorney.redwave.presentation.logd
 import com.omtorney.redwave.util.Resource
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.launch
 
-class EntryViewModel(
+class EntryDetailViewModel(
 //    private val getComments: GetComments,
     private val getPostDetails: GetPostDetails,
     private val application: Application,
@@ -44,7 +44,7 @@ class EntryViewModel(
             getPostDetails.invoke(path).collect { result ->
                 _state.value = when (result) {
                     is Resource.Success -> {
-                        Log.d("TESTLOG", "EntryViewModel: comments: ${result.data!![1].data.children}")
+                        logd("EntryDetailViewModel: comments: ${result.data!![1].data.children}")
                         FeedState(
                             postTitle = result.data!![0].data.children[0].data.title!!,
                             postContent = result.data!![0].data.children[0].data.selftext!!,

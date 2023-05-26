@@ -9,7 +9,7 @@ import com.omtorney.redwave.data.remote.FeedApi
 import com.omtorney.redwave.data.remote.MyCustomAdapter
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.domain.usecase.*
-import com.omtorney.redwave.presentation.detail.EntryViewModel
+import com.omtorney.redwave.presentation.detail.EntryDetailViewModel
 import com.omtorney.redwave.presentation.home.HomeViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -50,12 +50,12 @@ val appModule = module {
 
     /** ViewModels */
     viewModel { HomeViewModel(get(), get(), get(), get(), get()) } // viewModelOf(::HomeViewModel)
-    viewModel { EntryViewModel(get(), get(), get()) }
+    viewModel { EntryDetailViewModel(get(), get(), get()) }
 }
 
 fun provideRedditApi(): FeedApi {
     val moshi = Moshi.Builder()
-        .add(object  : Any() {}.javaClass, MyCustomAdapter())
+        .add(object : Any() {}.javaClass, MyCustomAdapter())
         .addLast(KotlinJsonAdapterFactory())
         .build()
     return Retrofit.Builder()

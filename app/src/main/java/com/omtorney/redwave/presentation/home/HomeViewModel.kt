@@ -38,7 +38,7 @@ class HomeViewModel(
         loadCache(selectedSubreddit)
     }
 
-    fun getEntries(subreddit: String, sortType: String) {
+    fun getEntries(subreddit: String) {
         viewModelScope.launch {
             getPosts.invoke(subreddit).collect { result ->
                 when (result) {

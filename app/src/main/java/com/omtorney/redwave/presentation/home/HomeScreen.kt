@@ -2,11 +2,32 @@ package com.omtorney.redwave.presentation.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,24 +47,25 @@ fun HomeScreen(
     val state = viewModel.state
     val selectedSubreddit = viewModel.selectedSubreddit
     var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }
-    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.clearCache()
-                },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.round_delete),
-                    contentDescription = "Clear cache"
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        scaffoldState = scaffoldState
+        topBar = {},
+        bottomBar = {
+            BottomAppBar(
+                actions = {},
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = viewModel::clearCache,
+                        elevation = FloatingActionButtonDefaults.elevation(0.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_delete),
+                            contentDescription = "Clear cache"
+                        )
+                    }
+                }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -77,8 +99,8 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedButton(
-                    onClick = { viewModel.getEntries(selectedSubreddit, selectedSortType) },
-                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primary),
+                    onClick = { viewModel.getEntries(selectedSubreddit) },
+                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .weight(1f)
                         .height(45.dp)
@@ -166,7 +188,7 @@ fun MySpinner(
             ) {
                 Text(
                     text = item,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_down),
@@ -177,7 +199,7 @@ fun MySpinner(
         dropdownItemFactory = { item, _ ->
             Text(
                 text = item,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
         },
         modifier = modifier
@@ -185,7 +207,7 @@ fun MySpinner(
             .height(45.dp)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small
             )
     )

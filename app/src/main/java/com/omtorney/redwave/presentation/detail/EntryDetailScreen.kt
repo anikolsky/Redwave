@@ -4,22 +4,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.omtorney.redwave.domain.model.Comment
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun EntryDetailScreen() {
-    val viewModel = getViewModel<EntryViewModel>()
+    val viewModel = getViewModel<EntryDetailViewModel>()
     val state = viewModel.state.value
 
     Box(
@@ -31,7 +30,7 @@ fun EntryDetailScreen() {
             item {
                 Text(
                     text = state.postTitle,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp)
@@ -41,7 +40,7 @@ fun EntryDetailScreen() {
             item {
                 Text(
                     text = state.postContent,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(4.dp)
                 )
             }
@@ -63,20 +62,20 @@ fun EntryDetailScreen() {
                                 text = text
                                     .replace(quote, "")
                                     .replace("</blockquote>", ""),
-                                style = MaterialTheme.typography.body2
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                             Text(
                                 text = comment.upVotes.toString(),
-                                style = MaterialTheme.typography.body2,
+                                style = MaterialTheme.typography.bodySmall,
                                 color = Color.Green.copy(alpha = 0.3f)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = comment.downVotes.toString(),
-                                style = MaterialTheme.typography.body2,
+                                style = MaterialTheme.typography.bodySmall,
                                 color = Color.Red.copy(alpha = 0.3f)
                             )
                         }
@@ -88,13 +87,13 @@ fun EntryDetailScreen() {
                         ) {
                             Text(
                                 text = comment.author,
-                                style = MaterialTheme.typography.body2,
-                                color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                             )
                             Text(
                                 text = comment.created,
-                                style = MaterialTheme.typography.body2,
-                                color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                             )
                         }
                     }

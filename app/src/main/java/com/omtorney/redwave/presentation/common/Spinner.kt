@@ -3,7 +3,8 @@ package com.omtorney.redwave.presentation.common
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,18 +31,19 @@ fun <T> Spinner(
             selectedItem
         )
 
-        androidx.compose.material.DropdownMenu(
+        DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = dropDownModifier
         ) {
             items.forEachIndexed { index, element ->
-                DropdownMenuItem(onClick = {
-                    onItemSelected(items[index])
-                    expanded = false
-                }) {
-                    dropdownItemFactory(element, index)
-                }
+                DropdownMenuItem(
+                    text = { dropdownItemFactory(element, index) },
+                    onClick = {
+                        onItemSelected(items[index])
+                        expanded = false
+                    }
+                )
             }
         }
     }

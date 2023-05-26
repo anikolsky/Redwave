@@ -1,7 +1,6 @@
 package com.omtorney.redwave.presentation
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType

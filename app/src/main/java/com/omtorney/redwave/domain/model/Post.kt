@@ -2,10 +2,6 @@ package com.omtorney.redwave.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.time.LocalDateTime
 
 @Entity(tableName = "posts")
 data class Post(

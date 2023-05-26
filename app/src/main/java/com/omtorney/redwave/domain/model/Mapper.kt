@@ -1,12 +1,11 @@
 package com.omtorney.redwave.domain.model
 
-import android.util.Log
 import com.omtorney.redwave.data.model.PostDto
 import java.text.SimpleDateFormat
 import java.util.*
 
 fun PostDto.toPost(): Post {
-    val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+    val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val dateTimeCreated = sdf.format(this.created * 1000)
     return Post(
         id = this.id,
@@ -84,5 +83,3 @@ fun parseText(inputText: String): String {
 //        }
 //    }
 //}
-
-
