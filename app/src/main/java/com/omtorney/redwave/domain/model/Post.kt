@@ -14,7 +14,7 @@ data class Post(
     val downVotes: Int,
     val upvoteRatio: Float,
     val score: Int,
-    val created: String,
+    val created: Long,
     val permalink: String,
     val url: String,
     val author: String,

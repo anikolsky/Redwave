@@ -58,32 +58,38 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getEntries(subreddit: String) {
-        viewModelScope.launch {
-            useCases.getPosts.invoke(subreddit).collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        useCases.cachePosts.invoke(result.data!!)
-                        loadCache(subreddit)
-//                        state = FeedState(feed = result.data!!)
-                    }
+        useCases.getPosts.invoke(subreddit).onEach { result ->
+            state = when (result) {
+                is Resource.Loading -> {
+                    FeedState(
+                        posts = result.data?.sortedByDescending { it.created } ?: emptyList(),
+                        isLoading = true
+                    )
+                }
 
-                    is Resource.Loading -> {
-                        state = FeedState(isLoading = true)
-                    }
+                is Resource.Success -> {
+                    FeedState(posts = result.data?.sortedByDescending { it.created } ?: emptyList())
+                }
 
-                    is Resource.Error -> {
-                        state = FeedState(error = result.message ?: "Unexpected error")
-                    }
+                is Resource.Error -> {
+                    FeedState(error = result.message ?: "Unexpected error")
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     private fun loadCache(subreddit: String) {
         getCachedEntriesJob?.cancel()
         getCachedEntriesJob =
             useCases.loadCachedPosts.invoke(subreddit = subreddit).onEach { posts ->
-                state = FeedState(posts = posts)
+                state = FeedState(posts = posts.sortedByDescending { it.created })
             }.launchIn(viewModelScope)
+    }
+
+    fun onPostClick(post: Post) = viewModelScope.launch {
+        if (post.isNew) {
+            val newPost = post.copy(isNew = false)
+            useCases.updatePost(newPost)
+        }
     }
 }

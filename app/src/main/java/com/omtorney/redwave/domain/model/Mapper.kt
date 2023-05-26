@@ -2,11 +2,9 @@ package com.omtorney.redwave.domain.model
 
 import com.omtorney.redwave.data.model.PostDto
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 fun PostDto.toPost(): Post {
-    val sdf = SimpleDateFormat("HH:mm  •  dd.MM.yyyy", Locale.getDefault())
-    val dateTimeCreated = sdf.format(this.created * 1000)
     return Post(
         id = this.id,
         subreddit = this.subreddit,
@@ -16,7 +14,7 @@ fun PostDto.toPost(): Post {
         downVotes = this.downs,
         upvoteRatio = this.upvoteRatio ?: 0f,
         score = this.score,
-        created = dateTimeCreated,
+        created = this.created * 1000,
         permalink = this.permalink,
         url = this.url ?: "no url",
         author = this.author,

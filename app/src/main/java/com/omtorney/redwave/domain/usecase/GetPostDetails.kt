@@ -6,8 +6,9 @@ import com.omtorney.redwave.presentation.logd
 import com.omtorney.redwave.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class GetPostDetails(
+class GetPostDetails @Inject constructor(
     private val repository: Repository
 ) {
     operator fun invoke(path: String): Flow<Resource<List<FeedDto>>> = flow {

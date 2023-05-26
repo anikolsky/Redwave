@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PostDao {
 
-    @Query("SELECT * FROM posts WHERE subreddit = :subreddit ORDER BY created DESC")
+    @Query("SELECT * FROM posts WHERE subreddit = :subreddit")
     fun getPosts(subreddit: String): Flow<List<Post>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -15,9 +15,6 @@ interface PostDao {
 
     @Update
     suspend fun updatePost(post: Post)
-
-    @Delete
-    suspend fun delete(post: Post)
 
     @Query("DELETE FROM posts")
     suspend fun deleteAll()

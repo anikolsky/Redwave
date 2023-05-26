@@ -32,17 +32,18 @@ fun AppNavHost() {
                 state = state,
                 onEvent = viewModel::onEvent,
                 onEntryClick = { post, sortType ->
-                val moshi = Moshi.Builder()
-                    .addLast(KotlinJsonAdapterFactory())
-                    .build()
-                val jsonAdapter = moshi.adapter(Post::class.java).lenient()
-                val postJson = Uri.encode(jsonAdapter.toJson(post))
-                navController.navigate(Screen.EntryDetail.route + "?postJson=$postJson&sortType=$sortType") {
-                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            })
+                    viewModel.onPostClick(post)
+                    val moshi = Moshi.Builder()
+                        .addLast(KotlinJsonAdapterFactory())
+                        .build()
+                    val jsonAdapter = moshi.adapter(Post::class.java).lenient()
+                    val postJson = Uri.encode(jsonAdapter.toJson(post))
+                    navController.navigate(Screen.EntryDetail.route + "?postJson=$postJson&sortType=$sortType") {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                })
         }
         composable(
             route = Screen.EntryDetail.route + "?postJson={postJson}&sortType={sortType}",

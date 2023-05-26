@@ -9,6 +9,6 @@ data class FeedState(
     val postTitle: String = "",
     val postContent: String = "",
     val isLoading: Boolean = false,
-    val error: String = "",
+    val error: String? = null,
     val selectedSubreddit: String = "androiddev"
 )

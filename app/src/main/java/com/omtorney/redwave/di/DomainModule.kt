@@ -1,7 +1,6 @@
 package com.omtorney.redwave.di
 
 import com.omtorney.redwave.domain.repository.Repository
-import com.omtorney.redwave.domain.usecase.CachePosts
 import com.omtorney.redwave.domain.usecase.ClearCache
 import com.omtorney.redwave.domain.usecase.GetComments
 import com.omtorney.redwave.domain.usecase.GetPostDetails
@@ -23,7 +22,6 @@ class DomainModule {
     @Singleton
     fun provideUseCases(repository: Repository): UseCases {
         return UseCases(
-            cachePosts = CachePosts(repository),
             clearCache = ClearCache(repository),
             getComments = GetComments(repository),
             getPostDetails = GetPostDetails(repository),

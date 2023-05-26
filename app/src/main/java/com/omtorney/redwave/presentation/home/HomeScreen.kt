@@ -1,9 +1,9 @@
 package com.omtorney.redwave.presentation.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.omtorney.redwave.R
@@ -43,7 +45,7 @@ import com.omtorney.redwave.presentation.common.FeedEvent
 import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.presentation.common.Spinner
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     state: FeedState,
@@ -56,44 +58,43 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = {
+                    Text(text = "Redwave")
+                },
                 actions = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        MySpinner(
-                            items = listOf(
-                                Subreddit.AndroidDev.title,
-                                Subreddit.Coding.title,
-                                Subreddit.Kotlin.title
-                            ),
-                            selectedItem = selectedSubreddit,
-                            onItemSelected = { item ->
-                                selectedSubreddit = item
-                                onEvent(FeedEvent.SelectSubreddit(selectedSubreddit))
-                            },
-                            modifier = Modifier.weight(2.5f)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        MySpinner(
-                            items = listOf(
-                                Sort.Hot.type,
-                                Sort.New.type,
-                                Sort.Top.type
-                            ),
-                            selectedItem = selectedSortType,
-                            onItemSelected = { selectedSortType = it },
-                            modifier = Modifier.weight(1f)
-                        )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
                     }
-                })
+                }
+            )
         },
         bottomBar = {
             BottomAppBar(
                 actions = {
+                    MySpinner(
+                        items = listOf(
+                            Subreddit.AndroidDev.title,
+                            Subreddit.Coding.title,
+                            Subreddit.Kotlin.title
+                        ),
+                        selectedItem = selectedSubreddit,
+                        onItemSelected = { item ->
+                            selectedSubreddit = item
+                            onEvent(FeedEvent.SelectSubreddit(selectedSubreddit))
+                        },
+                            modifier = Modifier.padding(horizontal = 8.dp).fillMaxWidth(0.5f)
+                    )
+//                        Spacer(modifier = Modifier.width(4.dp))
+//                        MySpinner(
+//                            items = listOf(
+//                                Sort.Hot.type,
+//                                Sort.New.type,
+//                                Sort.Top.type
+//                            ),
+//                            selectedItem = selectedSortType,
+//                            onItemSelected = { selectedSortType = it },
+//                            modifier = Modifier.weight(1f)
+//                        )
                     IconButton(onClick = { onEvent(FeedEvent.ClearCache) }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
@@ -115,63 +116,48 @@ fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-
-            if (state.posts.isNotEmpty()) {
-                LazyColumn(Modifier.fillMaxSize()) {
-                    state.posts.map { post ->
-                        item {
-                            EntryCard(
-                                post = post,
-                                onClick = {
-                                    onEntryClick(it, selectedSortType)
-                                    if (post.isNew) {
-                                        onEvent(FeedEvent.MarkEntryAsRead(it))
-                                    }
-                                }
-                            )
-                        }
-                    }
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                state.posts.map { post ->
                     item {
-                        Spacer(modifier = Modifier.height(50.dp))
+                        EntryCard(
+                            post = post,
+                            onClick = {
+                                onEntryClick(it, selectedSortType)
+                            },
+                            modifier = Modifier.animateItemPlacement()
+                        )
                     }
                 }
             }
+
             if (state.isLoading) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Loading...")
-                    }
-                }
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-            if (state.error.isNotEmpty()) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = state.error,
-                        fontSize = 20.sp,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+            if (state.error != null) {
+                Text(
+                    text = state.error,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                )
             }
-//        if (state.entries.isEmpty()) {
-//            Box(modifier = Modifier.fillMaxSize()) {
-//                Text(
-//                    text = "Refresh feed",
-//                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f),
-//                    modifier = Modifier.align(Alignment.Center)
-//                )
-//            }
-//        }
+            if (state.posts.isEmpty() && !state.isLoading && state.error == null) {
+                Text(
+                    text = "Feed is empty",
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -184,7 +170,7 @@ fun MySpinner(
     onItemSelected: (String) -> Unit,
 ) {
     Spinner(
-        dropDownModifier = modifier.wrapContentSize(),
+//        dropDownModifier = Modifier.wrapContentSize(),
         items = items,
         selectedItem = selectedItem,
         onItemSelected = onItemSelected,
@@ -213,8 +199,8 @@ fun MySpinner(
             )
         },
         modifier = modifier
-            .fillMaxWidth()
-            .height(45.dp)
+//            .fillMaxWidth()
+//            .height(45.dp)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.primary,
