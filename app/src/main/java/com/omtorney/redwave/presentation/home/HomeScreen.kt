@@ -33,17 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.omtorney.redwave.R
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.presentation.common.EntryCard
 import com.omtorney.redwave.presentation.common.Spinner
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
     onEntryClick: (Post, String) -> Unit
 ) {
-    val viewModel = getViewModel<HomeViewModel>() // TODO move to NavHost
+    val viewModel = hiltViewModel<HomeViewModel>() // TODO move to NavHost
     val state = viewModel.state
     val selectedSubreddit = viewModel.selectedSubreddit
     var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }

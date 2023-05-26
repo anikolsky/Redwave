@@ -1,29 +1,29 @@
 package com.omtorney.redwave.presentation.detail
 
-import android.app.Application
-import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.model.toComment
-import com.omtorney.redwave.domain.usecase.GetPostDetails
+import com.omtorney.redwave.domain.usecase.UseCases
 import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.presentation.logd
 import com.omtorney.redwave.util.Resource
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EntryDetailViewModel(
-//    private val getComments: GetComments,
-    private val getPostDetails: GetPostDetails,
-    private val application: Application,
+@HiltViewModel
+class EntryDetailViewModel @Inject constructor(
+    private val useCases: UseCases,
+//    private val application: Application,
     savedStateHandle: SavedStateHandle
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val _state = mutableStateOf(FeedState())
     val state: State<FeedState> = _state
@@ -41,7 +41,7 @@ class EntryDetailViewModel(
 
     private fun loadDetails(path: String) {
         viewModelScope.launch {
-            getPostDetails.invoke(path).collect { result ->
+            useCases.getPostDetails.invoke(path).collect { result ->
                 _state.value = when (result) {
                     is Resource.Success -> {
                         logd("EntryDetailViewModel: comments: ${result.data!![1].data.children}")
@@ -62,17 +62,17 @@ class EntryDetailViewModel(
         }
     }
 
-    fun shareSelectedText(text: String, selectionStart: Int, selectionEnd: Int) {
-        val context = application.applicationContext
-        val selectedTextString = text.substring(selectionStart, selectionEnd)
-
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, selectedTextString)
-            type = "text/plain"
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        context.startActivity(shareIntent)
-    }
+//    fun shareSelectedText(text: String, selectionStart: Int, selectionEnd: Int) {
+//        val context = application.applicationContext
+//        val selectedTextString = text.substring(selectionStart, selectionEnd)
+//
+//        val sendIntent = Intent().apply {
+//            action = Intent.ACTION_SEND
+//            putExtra(Intent.EXTRA_TEXT, selectedTextString)
+//            type = "text/plain"
+//        }
+//
+//        val shareIntent = Intent.createChooser(sendIntent, null)
+//        context.startActivity(shareIntent)
+//    }
 }

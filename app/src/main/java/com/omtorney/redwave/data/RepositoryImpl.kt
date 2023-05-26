@@ -4,8 +4,9 @@ import com.omtorney.redwave.data.local.PostDao
 import com.omtorney.redwave.data.remote.FeedApi
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.repository.Repository
+import javax.inject.Inject
 
-class RepositoryImpl(
+class RepositoryImpl @Inject constructor(
     private val feedApi: FeedApi,
     private val postDao: PostDao
 ) : Repository {

@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.koin.androidx.compose.getViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun EntryDetailScreen() {
-    val viewModel = getViewModel<EntryDetailViewModel>()
+    val viewModel = hiltViewModel<EntryDetailViewModel>()
     val state = viewModel.state.value
 
     Box(
