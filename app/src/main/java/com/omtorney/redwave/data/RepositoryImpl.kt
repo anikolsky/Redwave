@@ -15,7 +15,8 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getPost(path: String) = feedApi.getPost(path)
 
     override fun loadCachedPosts(subreddit: String) = postDao.getPosts(subreddit)
+    override suspend fun markAllAsRead() = postDao.markAllAsRead()
     override suspend fun cachePosts(posts: List<Post>) = postDao.insertAll(posts)
     override suspend fun updatePost(post: Post) = postDao.updatePost(post)
-    override suspend fun clearCache() = postDao.deleteAll()
+    override suspend fun clearCache(subreddit: String) = postDao.deleteAll(subreddit)
 }

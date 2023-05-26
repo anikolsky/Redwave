@@ -6,6 +6,7 @@ import com.omtorney.redwave.domain.usecase.GetComments
 import com.omtorney.redwave.domain.usecase.GetPostDetails
 import com.omtorney.redwave.domain.usecase.GetPosts
 import com.omtorney.redwave.domain.usecase.LoadCachedPosts
+import com.omtorney.redwave.domain.usecase.MarkAllAsRead
 import com.omtorney.redwave.domain.usecase.UpdatePost
 import com.omtorney.redwave.domain.usecase.UseCases
 import dagger.Module
@@ -27,6 +28,7 @@ class DomainModule {
             getPostDetails = GetPostDetails(repository),
             getPosts = GetPosts(repository),
             loadCachedPosts = LoadCachedPosts(repository),
+            markAllAsRead = MarkAllAsRead(repository),
             updatePost = UpdatePost(repository)
         )
     }

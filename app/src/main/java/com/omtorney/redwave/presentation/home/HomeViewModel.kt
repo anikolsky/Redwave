@@ -42,16 +42,15 @@ class HomeViewModel @Inject constructor(
                 loadCache(event.subreddit)
             }
 
-            is FeedEvent.MarkEntryAsRead -> {
+            is FeedEvent.ClearCache -> {
                 viewModelScope.launch {
-                    val updatedEntry = event.post.copy(isNew = false)
-                    useCases.updatePost.invoke(updatedEntry)
+                    useCases.clearCache.invoke(event.subreddit)
                 }
             }
 
-            FeedEvent.ClearCache -> {
+            FeedEvent.MarkAllAsRead -> {
                 viewModelScope.launch {
-                    useCases.clearCache.invoke()
+                    useCases.markAllAsRead()
                 }
             }
         }

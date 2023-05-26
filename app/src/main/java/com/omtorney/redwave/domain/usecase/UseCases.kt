@@ -6,5 +6,6 @@ data class UseCases(
     val getPostDetails: GetPostDetails,
     val getPosts: GetPosts,
     val loadCachedPosts: LoadCachedPosts,
+    val markAllAsRead: MarkAllAsRead,
     val updatePost: UpdatePost
 )

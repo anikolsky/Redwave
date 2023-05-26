@@ -10,7 +10,8 @@ interface Repository {
     suspend fun getPost(path: String): List<FeedDto>
 
     fun loadCachedPosts(subreddit: String): Flow<List<Post>>
+    suspend fun markAllAsRead()
     suspend fun cachePosts(posts: List<Post>)
     suspend fun updatePost(post: Post)
-    suspend fun clearCache()
+    suspend fun clearCache(subreddit: String)
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
@@ -95,7 +96,13 @@ fun HomeScreen(
 //                            onItemSelected = { selectedSortType = it },
 //                            modifier = Modifier.weight(1f)
 //                        )
-                    IconButton(onClick = { onEvent(FeedEvent.ClearCache) }) {
+                    IconButton(onClick = { onEvent(FeedEvent.MarkAllAsRead) }) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Mark all as read"
+                        )
+                    }
+                    IconButton(onClick = { onEvent(FeedEvent.ClearCache(selectedSubreddit)) }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Clear cache"
