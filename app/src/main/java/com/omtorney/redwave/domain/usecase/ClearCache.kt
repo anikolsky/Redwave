@@ -6,7 +6,7 @@ import javax.inject.Inject
 class ClearCache @Inject constructor(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(subreddit: String) {
-        repository.clearCache(subreddit)
+    suspend operator fun invoke() {
+        repository.clearCache()
     }
 }

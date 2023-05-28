@@ -28,36 +28,37 @@ class HomeViewModel @Inject constructor(
     private var getCachedEntriesJob: Job? = null
 
     init {
-        loadCache("androiddev")
+        loadCache()
     }
 
     fun onEvent(event: FeedEvent) {
         when (event) {
-            is FeedEvent.GetEntries -> {
-                getEntries(event.subreddit)
-            }
-
-            is FeedEvent.SelectSubreddit -> {
-                state = FeedState(selectedSubreddit = event.subreddit)
-                loadCache(event.subreddit)
-            }
-
             is FeedEvent.ClearCache -> {
                 viewModelScope.launch {
-                    useCases.clearCache.invoke(event.subreddit)
+                    useCases.clearCache()
                 }
             }
 
-            FeedEvent.MarkAllAsRead -> {
+            is FeedEvent.GetEntries -> {
+                getEntries()
+            }
+
+            is FeedEvent.MarkAllAsRead -> {
                 viewModelScope.launch {
                     useCases.markAllAsRead()
                 }
             }
+
+            is FeedEvent.SelectSubreddit -> {
+                state = FeedState(selectedSubreddit = event.subreddit)
+                loadCache()
+            }
         }
     }
 
-    private fun getEntries(subreddit: String) {
-        useCases.getPosts.invoke(subreddit).onEach { result ->
+    private fun getEntries() {
+        val subreddits = Subreddits::class.sealedSubclasses.map { it.objectInstance?.title!! }
+        useCases.getAllPosts.invoke(subreddits).onEach { result ->
             state = when (result) {
                 is Resource.Loading -> {
                     FeedState(
@@ -77,10 +78,10 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadCache(subreddit: String) {
+    private fun loadCache() {
         getCachedEntriesJob?.cancel()
         getCachedEntriesJob =
-            useCases.loadCachedPosts.invoke(subreddit = subreddit).onEach { posts ->
+            useCases.loadAllCachedPosts().onEach { posts ->
                 state = FeedState(posts = posts.sortedByDescending { it.created })
             }.launchIn(viewModelScope)
     }

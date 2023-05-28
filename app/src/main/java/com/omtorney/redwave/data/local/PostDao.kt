@@ -10,6 +10,9 @@ interface PostDao {
     @Query("SELECT * FROM posts WHERE subreddit = :subreddit")
     fun getPosts(subreddit: String): Flow<List<Post>>
 
+    @Query("SELECT * FROM posts")
+    fun getAllPosts(): Flow<List<Post>>
+
     @Query("UPDATE posts SET isNew = 0")
     suspend fun markAllAsRead()
 
@@ -19,6 +22,6 @@ interface PostDao {
     @Update
     suspend fun updatePost(post: Post)
 
-    @Query("DELETE FROM posts WHERE subreddit = :subreddit")
-    suspend fun deleteAll(subreddit: String)
+    @Query("DELETE FROM posts")
+    suspend fun deleteAll()
 }

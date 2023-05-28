@@ -2,9 +2,11 @@ package com.omtorney.redwave.di
 
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.domain.usecase.ClearCache
+import com.omtorney.redwave.domain.usecase.GetAllPosts
 import com.omtorney.redwave.domain.usecase.GetComments
 import com.omtorney.redwave.domain.usecase.GetPostDetails
 import com.omtorney.redwave.domain.usecase.GetPosts
+import com.omtorney.redwave.domain.usecase.LoadAllCachedPosts
 import com.omtorney.redwave.domain.usecase.LoadCachedPosts
 import com.omtorney.redwave.domain.usecase.MarkAllAsRead
 import com.omtorney.redwave.domain.usecase.UpdatePost
@@ -27,7 +29,9 @@ class DomainModule {
             getComments = GetComments(repository),
             getPostDetails = GetPostDetails(repository),
             getPosts = GetPosts(repository),
+            getAllPosts = GetAllPosts(repository),
             loadCachedPosts = LoadCachedPosts(repository),
+            loadAllCachedPosts = LoadAllCachedPosts(repository),
             markAllAsRead = MarkAllAsRead(repository),
             updatePost = UpdatePost(repository)
         )
