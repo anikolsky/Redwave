@@ -86,10 +86,12 @@ class HomeViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    fun onPostClick(post: Post) = viewModelScope.launch {
-        if (post.isNew) {
-            val newPost = post.copy(isNew = false)
-            useCases.updatePost(newPost)
+    fun onPostClick(post: Post) {
+        viewModelScope.launch {
+            if (post.isNew) {
+                val newPost = post.copy(isNew = false)
+                useCases.updatePost(newPost)
+            }
         }
     }
 }

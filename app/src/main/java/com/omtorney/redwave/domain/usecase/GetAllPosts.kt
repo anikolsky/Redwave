@@ -22,8 +22,13 @@ class GetAllPosts @Inject constructor(
         try {
             val cachedPosts = repository.loadAllCachedPosts().first()
             emit(Resource.Loading(data = cachedPosts))
-            val posts = fetchMultipleFeeds(subreddits)
-            repository.cachePosts(posts = posts)
+            val fetchedPosts = fetchMultipleFeeds(subreddits)
+            val newPosts = fetchedPosts.filter { fetchedPost ->
+                !cachedPosts.any { cachedPost ->
+                    cachedPost.id == fetchedPost.id
+                }
+            }
+            repository.cachePosts(posts = newPosts)
             emit(Resource.Success(data = repository.loadAllCachedPosts().first()))
         } catch (e: Exception) {
             logd("GetAllPosts: error: ${e.localizedMessage}")

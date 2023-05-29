@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
@@ -25,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +53,8 @@ fun HomeScreen(
 ) {
     var selectedSubreddit by rememberSaveable { mutableStateOf(state.selectedSubreddit) }
     var selectedSortType by rememberSaveable { mutableStateOf(Sort.New.type) }
+
+    val listState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -124,7 +128,10 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState
+            ) {
                 state.posts.map { post ->
                     item {
                         EntryCard(
@@ -136,6 +143,10 @@ fun HomeScreen(
                         )
                     }
                 }
+            }
+
+            LaunchedEffect(state.posts.size) {
+                listState.scrollToItem(0)
             }
 
             if (state.isLoading) {
