@@ -53,6 +53,14 @@ class HomeViewModel @Inject constructor(
                 state = FeedState(selectedSubreddit = event.subreddit)
                 loadCache()
             }
+
+            FeedEvent.SortByRating -> {
+                state = state.copy(posts = state.posts.sortedByDescending { it.upVotes })
+            }
+
+            FeedEvent.SortByTime -> {
+                state = state.copy(posts = state.posts.sortedByDescending { it.created })
+            }
         }
     }
 

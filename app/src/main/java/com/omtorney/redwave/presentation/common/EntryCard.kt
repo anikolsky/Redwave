@@ -1,5 +1,6 @@
 package com.omtorney.redwave.presentation.common
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,19 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.presentation.home.Subreddits
+import com.omtorney.redwave.presentation.ui.theme.RedwaveTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -100,6 +102,37 @@ fun EntryCard(
                     modifier = Modifier.padding(vertical = 2.dp, horizontal = 6.dp)
                 )
             }
+        }
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun EntryCardPreview() {
+    RedwaveTheme {
+        Surface {
+            EntryCard(
+                post = Post(
+                    id = "t3_13oq9av",
+                    subreddit = "androiddev",
+                    title = "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus" +
+                            "saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae",
+                    content = "Content of the post",
+                    upVotes = 3,
+                    downVotes = 0,
+                    upvoteRatio = 0.71f,
+                    score = 3,
+                    created = 1684760420000,
+                    permalink = "/r/androiddev/comments/",
+                    url = "https://www.reddit.com/r/androiddev/comments/",
+                    author = "Cicero",
+                    comments = 3,
+                    isStickied = false,
+                    isVideo = false,
+                    isNew = false
+                ),
+                onClick = {}
+            )
         }
     }
 }
