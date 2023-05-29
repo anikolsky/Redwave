@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -107,13 +106,13 @@ fun HomeScreen(
 //                        )
                     IconButton(onClick = { onEvent(FeedEvent.MarkAllAsRead(selectedSubreddit)) }) {
                         Icon(
-                            imageVector = Icons.Default.Check,
+                            painterResource(id = R.drawable.ic_round_mark_as_read),
                             contentDescription = "Mark all as read"
                         )
                     }
                     IconButton(onClick = { onEvent(FeedEvent.ClearCache(selectedSubreddit)) }) {
                         Icon(
-                            imageVector = Icons.Default.Delete,
+                            painterResource(id = R.drawable.ic_round_clear),
                             contentDescription = "Clear cache"
                         )
                     }
@@ -126,8 +125,10 @@ fun HomeScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = if (buttonCheckedState) Icons.Default.KeyboardArrowUp
-                            else Icons.Default.KeyboardArrowDown,
+                            painterResource(
+                                id = if (buttonCheckedState) R.drawable.ic_round_sort_by_rating
+                                else R.drawable.ic_round_sort_by_time
+                            ),
                             contentDescription = "Sort posts by rating"
                         )
                     }
@@ -137,10 +138,14 @@ fun HomeScreen(
                         onClick = { onEvent(FeedEvent.GetEntries(selectedSubreddit)) },
                         elevation = FloatingActionButtonDefaults.elevation(0.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.round_sync),
-                            contentDescription = "Load"
-                        )
+                        if (state.isLoading) {
+                            CircularProgressIndicator()
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_round_sync),
+                                contentDescription = "Load"
+                            )
+                        }
                     }
                 }
             )
@@ -172,9 +177,6 @@ fun HomeScreen(
                 listState.scrollToItem(0)
             }
 
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
             if (state.error != null) {
                 Text(
                     text = state.error,

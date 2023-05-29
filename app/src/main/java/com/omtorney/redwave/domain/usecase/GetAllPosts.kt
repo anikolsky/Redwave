@@ -23,11 +23,7 @@ class GetAllPosts @Inject constructor(
             val cachedPosts = repository.loadAllCachedPosts().first()
             emit(Resource.Loading(data = cachedPosts))
             val fetchedPosts = fetchMultipleFeeds(subreddits)
-            val newPosts = fetchedPosts.filter { fetchedPost ->
-                !cachedPosts.any { cachedPost ->
-                    cachedPost.id == fetchedPost.id
-                }
-            }
+            val newPosts = createNewList(cachedList = cachedPosts, fetchedList = fetchedPosts)
             repository.cachePosts(posts = newPosts)
             emit(Resource.Success(data = repository.loadAllCachedPosts().first()))
         } catch (e: Exception) {
@@ -54,5 +50,26 @@ class GetAllPosts @Inject constructor(
             posts.addAll(resultList.flatten())
         }
         return posts
+    }
+
+    private fun createNewList(cachedList: List<Post>, fetchedList: List<Post>): List<Post> {
+        val cachedMap = cachedList.associateBy { it.id }
+        return fetchedList.map { fetchedPost ->
+            val cachedPost = cachedMap[fetchedPost.id]
+            val newPost = if (cachedPost != null) {
+                fetchedPost.copy(isNew = cachedPost.isNew)
+            } else {
+                fetchedPost
+            }
+            newPost
+        }
+
+////      Previous method that didn't update cached posts and just returned new ones
+
+//        return fetchedList.filter { fetchedPost ->
+//            !cachedList.any { cachedPost ->
+//                cachedPost.id == fetchedPost.id
+//            }
+//        }
     }
 }
