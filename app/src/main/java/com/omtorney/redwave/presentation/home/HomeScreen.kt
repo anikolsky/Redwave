@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,9 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.omtorney.redwave.R
 import com.omtorney.redwave.domain.model.Post
-import com.omtorney.redwave.presentation.common.EntryCard
-import com.omtorney.redwave.presentation.common.FeedEvent
-import com.omtorney.redwave.presentation.common.FeedState
+import com.omtorney.redwave.presentation.home.components.EntryCard
 import com.omtorney.redwave.presentation.common.Spinner
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

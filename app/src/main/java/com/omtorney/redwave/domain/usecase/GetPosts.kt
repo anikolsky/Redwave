@@ -17,7 +17,7 @@ class GetPosts @Inject constructor(
         try {
             val cachedPosts = loadCache(subreddit)
             emit(Resource.Loading(data = cachedPosts))
-            val feed = repository.getFeed(subreddit = subreddit).data.children
+            val feed = repository.fetchSubreddit(subreddit = subreddit).data.children
             val posts = feed.map { it.data.toPost() }
             repository.cachePosts(posts = posts)
             emit(Resource.Success(loadCache(subreddit)))

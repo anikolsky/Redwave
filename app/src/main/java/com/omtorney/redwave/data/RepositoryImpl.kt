@@ -1,19 +1,19 @@
 package com.omtorney.redwave.data
 
 import com.omtorney.redwave.data.local.PostDao
-import com.omtorney.redwave.data.remote.FeedApi
+import com.omtorney.redwave.data.remote.NetworkService
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    private val feedApi: FeedApi,
+    private val networkService: NetworkService,
     private val postDao: PostDao
 ) : Repository {
 
-    override suspend fun getFeed(subreddit: String) = feedApi.getFeed(subreddit)
-    override suspend fun getPost(path: String) = feedApi.getPost(path)
+    override suspend fun fetchSubreddit(subreddit: String) = networkService.fetchSubreddit(subreddit)
+    override suspend fun fetchPost(path: String) = networkService.fetchPost(path)
 
     override fun loadCachedPosts(subreddit: String) = postDao.getPosts(subreddit)
     override fun loadAllCachedPosts(): Flow<List<Post>> = postDao.getAllPosts()

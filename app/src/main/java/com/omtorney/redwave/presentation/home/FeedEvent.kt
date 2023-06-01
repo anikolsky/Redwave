@@ -1,4 +1,4 @@
-package com.omtorney.redwave.presentation.common
+package com.omtorney.redwave.presentation.home
 
 sealed class FeedEvent {
     data class ClearCache(val subreddit: String) : FeedEvent()

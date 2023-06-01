@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.omtorney.redwave.BuildConfig
 import com.omtorney.redwave.data.local.AppDatabase
 import com.omtorney.redwave.data.local.PostDao
-import com.omtorney.redwave.data.remote.FeedApi
+import com.omtorney.redwave.data.remote.NetworkService
 import com.omtorney.redwave.data.remote.MyCustomAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -40,7 +40,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideFeedApi(): FeedApi {
+    fun provideFeedApi(): NetworkService {
         val moshi = Moshi.Builder()
             .add(object : Any() {}.javaClass, MyCustomAdapter())
             .addLast(KotlinJsonAdapterFactory())
@@ -50,6 +50,6 @@ object DataModule {
             .baseUrl(BuildConfig.API_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(FeedApi::class.java)
+            .create(NetworkService::class.java)
     }
 }

@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omtorney.redwave.domain.model.Post
 import com.omtorney.redwave.domain.usecase.UseCases
-import com.omtorney.redwave.presentation.common.FeedEvent
-import com.omtorney.redwave.presentation.common.FeedState
 import com.omtorney.redwave.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

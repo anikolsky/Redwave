@@ -1,4 +1,4 @@
-package com.omtorney.redwave.presentation.common
+package com.omtorney.redwave.presentation.home.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.border
@@ -123,7 +123,7 @@ fun EntryCardPreview() {
                     upvoteRatio = 0.71f,
                     score = 3,
                     created = 1684760420000,
-                    permalink = "/r/androiddev/comments/",
+                    permalink = "/r/androiddev/replies/",
                     url = "https://www.reddit.com/r/androiddev/comments/",
                     author = "Cicero",
                     comments = 3,

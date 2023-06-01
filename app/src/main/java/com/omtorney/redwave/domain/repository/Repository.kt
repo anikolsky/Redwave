@@ -1,13 +1,13 @@
 package com.omtorney.redwave.domain.repository
 
-import com.omtorney.redwave.data.model.FeedDto
+import com.omtorney.redwave.data.model.PostListing
 import com.omtorney.redwave.domain.model.Post
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun getFeed(subreddit: String): FeedDto
-    suspend fun getPost(path: String): List<FeedDto>
+    suspend fun fetchSubreddit(subreddit: String): PostListing
+    suspend fun fetchPost(path: String): String
 
     fun loadCachedPosts(subreddit: String): Flow<List<Post>>
     fun loadAllCachedPosts(): Flow<List<Post>>

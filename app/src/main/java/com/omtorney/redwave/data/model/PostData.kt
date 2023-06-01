@@ -4,49 +4,14 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FeedDto(
-//    @Json(name = "kind")
-//    val kind: String,
-    @Json(name = "data")
-    val data: Data
-)
-
-@JsonClass(generateAdapter = true)
-data class Data(
-//    @Json(name = "after")
-//    val after: String,
-//    @Json(name = "dist")
-//    val dist: Int,
-//    @Json(name = "modhash")
-//    val modhash: String,
-//    @Json(name = "geo_filter")
-//    val geoFilter: Any?,
-    @Json(name = "children")
-    val children: List<Children>,
-//    @Json(name = "before")
-//    val before: Any?
-)
-
-@JsonClass(generateAdapter = true)
-data class Children(
-//    @Json(name = "kind")
-//    val kind: String,
-    @Json(name = "data")
-    val data: PostDto
-)
-
-@JsonClass(generateAdapter = true)
-data class PostDto(
+data class PostData(
 //    @Json(name = "approved_at_utc")
 //    val approvedAtUtc: Any?,
     @Json(name = "subreddit")
     val subreddit: String,
-    @Json(name = "selftext")
+    @Json(name = "selftext") // for PostData as post
     val selftext: String? = null,
-    @Json(name = "body")
-    val body: String? = null,
-    @Json(name = "replies")
-    val replies: Any? = null,
+
 //    @Json(name = "author_fullname")
 //    val authorFullname: String,
 //    @Json(name = "saved")
@@ -242,7 +207,7 @@ data class PostDto(
     @Json(name = "stickied")
     val stickied: Boolean,
     @Json(name = "url")
-    val url: String? = null,
+    val url: String? = null, // for PostData as post
 //    @Json(name = "subreddit_subscribers")
 //    val subredditSubscribers: Int,
 //    @Json(name = "created_utc")
@@ -262,117 +227,3 @@ data class PostDto(
 //    @Json(name = "link_flair_template_id")
 //    val linkFlairTemplateId: String?
 )
-
-//@JsonClass(generateAdapter = true)
-//data class MediaEmbed(
-//    @Json(name = "content")
-//    val content: String?,
-//    @Json(name = "width")
-//    val width: Int?,
-//    @Json(name = "scrolling")
-//    val scrolling: Boolean?,
-//    @Json(name = "height")
-//    val height: Int?
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class SecureMediaEmbed(
-//    @Json(name = "content")
-//    val content: String?,
-//    @Json(name = "width")
-//    val width: Int?,
-//    @Json(name = "scrolling")
-//    val scrolling: Boolean?,
-//    @Json(name = "media_domain_url")
-//    val mediaDomainUrl: String?,
-//    @Json(name = "height")
-//    val height: Int?
-//)
-
-//@JsonClass(generateAdapter = true)
-//class Gildings
-
-//@JsonClass(generateAdapter = true)
-//data class Media(
-//    @Json(name = "oembed")
-//    val oembed: Oembed,
-//    @Json(name = "type")
-//    val type: String
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class Oembed(
-//    @Json(name = "provider_url")
-//    val providerUrl: String,
-//    @Json(name = "url")
-//    val url: String?,
-//    @Json(name = "html")
-//    val html: String,
-//    @Json(name = "author_name")
-//    val authorName: String,
-//    @Json(name = "height")
-//    val height: Int?,
-//    @Json(name = "width")
-//    val width: Int,
-//    @Json(name = "version")
-//    val version: String,
-//    @Json(name = "author_url")
-//    val authorUrl: String,
-//    @Json(name = "provider_name")
-//    val providerName: String,
-//    @Json(name = "cache_age")
-//    val cacheAge: Long?,
-//    @Json(name = "type")
-//    val type: String,
-//    @Json(name = "title")
-//    val title: String?,
-//    @Json(name = "thumbnail_width")
-//    val thumbnailWidth: Int?,
-//    @Json(name = "thumbnail_url")
-//    val thumbnailUrl: String?,
-//    @Json(name = "thumbnail_height")
-//    val thumbnailHeight: Int?
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class Preview(
-//    @Json(name = "images")
-//    val images: List<Image>,
-//    @Json(name = "enabled")
-//    val enabled: Boolean
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class Image(
-//    @Json(name = "source")
-//    val source: Source,
-//    @Json(name = "resolutions")
-//    val resolutions: List<Resolution>,
-//    @Json(name = "variants")
-//    val variants: Variants?,
-//    @Json(name = "id")
-//    val id: String
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class Source(
-//    @Json(name = "url")
-//    val url: String,
-//    @Json(name = "width")
-//    val width: Int,
-//    @Json(name = "height")
-//    val height: Int
-//)
-
-//@JsonClass(generateAdapter = true)
-//data class Resolution(
-//    @Json(name = "url")
-//    val url: String,
-//    @Json(name = "width")
-//    val width: Int,
-//    @Json(name = "height")
-//    val height: Int
-//)
-
-//@JsonClass(generateAdapter = true)
-//class Variants

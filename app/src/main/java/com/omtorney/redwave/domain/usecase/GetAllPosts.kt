@@ -34,7 +34,7 @@ class GetAllPosts @Inject constructor(
 
     private suspend fun fetchPosts(subreddit: String): List<Post> {
         return withContext(Dispatchers.IO) {
-            val feed = repository.getFeed(subreddit = subreddit).data.children
+            val feed = repository.fetchSubreddit(subreddit = subreddit).data.children
             feed.map { it.data.toPost() }
         }
     }

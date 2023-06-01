@@ -1,10 +1,9 @@
 package com.omtorney.redwave.domain.model
 
-import com.omtorney.redwave.data.model.PostDto
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.omtorney.redwave.data.model.PostData
+import com.omtorney.redwave.data.model.ReplyData
 
-fun PostDto.toPost(): Post {
+fun PostData.toPost(): Post {
     return Post(
         id = this.id,
         subreddit = this.subreddit,
@@ -25,22 +24,15 @@ fun PostDto.toPost(): Post {
     )
 }
 
-fun PostDto.toComment(): Comment {
-    val sdf = SimpleDateFormat("HH:mm  •  dd.MM.yyyy", Locale.getDefault())
-    val dateTimeCreated = sdf.format(this.created * 1000)
-    return Comment(
+fun ReplyData.toReply(): Reply {
+    return Reply(
         id = this.id,
         content = this.body ?: "no content",
-        upVotes = this.ups,
-        downVotes = this.downs,
-        upvoteRatio = this.upvoteRatio ?: 0f,
+        likes = this.likes ?: 0,
         score = this.score,
-        created = dateTimeCreated,
+        created = this.created * 1000,
         author = this.author,
-        replies = when (this.replies) {
-            is List<*> -> { toComment() }
-            else -> { "" }
-        }
+        replies = this.replies
     )
 }
 

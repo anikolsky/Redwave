@@ -1,8 +1,6 @@
 package com.omtorney.redwave.domain.usecase
 
-import com.omtorney.redwave.BuildConfig
-import com.omtorney.redwave.domain.model.Comment
-import com.omtorney.redwave.domain.model.toComment
+import com.omtorney.redwave.domain.model.Reply
 import com.omtorney.redwave.domain.repository.Repository
 import com.omtorney.redwave.presentation.logd
 import com.omtorney.redwave.util.Resource
@@ -13,13 +11,12 @@ import javax.inject.Inject
 class GetComments @Inject constructor(
     private val repository: Repository
 ) {
-    operator fun invoke(path: String): Flow<Resource<List<Comment>>> = flow {
+    operator fun invoke(path: String): Flow<Resource<List<Reply>>> = flow {
         try {
             emit(Resource.Loading())
-            logd("GetComments: url: ${BuildConfig.API_URL}$path.json")
-            val postDetail = repository.getPost(path)
-            val comments = postDetail[1].data.children.map { it.data.toComment() }
-            emit(Resource.Success(data = comments))
+            val postDetail = repository.fetchPost(path)
+            val replies = postDetail[1].data.children.map { it.data.toReply() }
+            emit(Resource.Success(data = replies))
         } catch (e: Exception) {
             logd("GetComments: error: ${e.localizedMessage}")
             emit(Resource.Error(message = e.localizedMessage ?: "Unexpected error"))
